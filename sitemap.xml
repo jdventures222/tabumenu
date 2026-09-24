@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://tabumenu.fyt.life/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tabumenu.fyt.life/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://tabumenu.fyt.life/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://tabumenu.fyt.life/?lang=vi"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tabumenu.fyt.life/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://tabumenu.fyt.life/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://tabumenu.fyt.life/?lang=zh-Hant"/>
+    <xhtml:link rel="alternate" hreflang="tl" href="https://tabumenu.fyt.life/?lang=tl"/>
+    <xhtml:link rel="alternate" hreflang="fa" href="https://tabumenu.fyt.life/?lang=fa"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tabumenu.fyt.life/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://tabumenu.fyt.life/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://tabumenu.fyt.life/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://tabumenu.fyt.life/?lang=hi"/>
+    <xhtml:link rel="alternate" hreflang="ur" href="https://tabumenu.fyt.life/?lang=ur"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tabumenu.fyt.life/"/>
+  </url>
+</urlset>

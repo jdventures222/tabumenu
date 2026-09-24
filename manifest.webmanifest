@@ -1,0 +1,17 @@
+{
+ "name": "Tabu Shabu",
+ "short_name": "Tabu Shabu",
+ "description": "Swish, dip, and repeat · 111 S Glassell St, Orange, CA 92866",
+ "start_url": "./",
+ "display": "minimal-ui",
+ "lang": "en",
+ "background_color": "#F6F2ED",
+ "theme_color": "#313131",
+ "icons": [
+  {
+   "src": "assets/logo.png",
+   "sizes": "648x398",
+   "type": "image/png"
+  }
+ ]
+}
