@@ -585,6 +585,7 @@ html[lang="ru"] { --display: var(--text); }
 html[dir="rtl"] .promo-list .promo-card > svg { transform: scaleX(-1); }
 html:is([lang="ko"], [lang^="zh"], [lang="ja"], [lang="hi"], [lang="ar"], [lang="fa"], [lang="ur"]) .promo-list .promo-card :is(.eyebrow, .promo-title) { text-transform: none; letter-spacing: 0; }
 html:is([lang="ko"], [lang^="zh"], [lang="ja"]) .promo-list .promo-card .promo-title { font-size: 1.125rem; line-height: 1.5; }
+@media (max-width: 359px) { .specials.promo-list.tabu-shabu-promos { --promo-title-size: 1.1875rem; } .tabu-shabu-promos .promo-card { grid-template-columns: 96px minmax(0, 1fr) 20px; } .tabu-shabu-promos .promo-card .promo-media { inline-size: 96px; } }
 html:is([lang="ar"], [lang="fa"], [lang="hi"]) .promo-list .promo-card :is(.eyebrow, .promo-title, .when, .terms) { line-height: 1.7; }
 html[lang="ur"] .promo-list .promo-card :is(.eyebrow, .promo-title, .when, .terms) { line-height: 2.6; }
 .hide-flagged .promo-list .promo-card.flagged { display: none; }
@@ -619,14 +620,16 @@ html[lang^="zh"] .how2 h2 { word-break:keep-all; }
 .pot-steps { list-style:none; margin:20px 0 0; padding:0; display:grid; grid-template-columns:minmax(0, 1fr); gap:32px; }
 .step { scroll-margin-top:calc(var(--bar-h) + 8px); }
 /* A step's badge turns dark with a check once the step has a pick, so the page itself shows how far the order has come. */
-.step-top { display:flex; align-items:flex-start; gap:6px 12px; margin:0 0 12px; }
-.step-head { flex:1; min-width:0; display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; margin:0; font-family:var(--display); font-size:1.3125rem; line-height:1.2; font-weight:600; color:var(--ink); }
-.step-n { flex:none; display:inline-flex; align-items:center; gap:3px; padding:3px 10px; border-radius:999px; background:var(--red); color:#FFFFFF; font-family:var(--text); font-size:.75rem; line-height:1.4; font-weight:700; transition:background-color .2s var(--ease); }
+.step-top { display:grid; gap:8px; margin:0 0 12px; }
+.step-head { min-width:0; display:flex; align-items:flex-start; gap:10px; margin:0; font-family:var(--display); font-size:1.3125rem; line-height:1.2; font-weight:600; color:var(--ink); }
+.step-n { flex:none; display:inline-flex; align-items:center; gap:3px; margin-top:1px; padding:3px 10px; border-radius:999px; background:var(--red); color:#FFFFFF; font-family:var(--text); font-size:.75rem; line-height:1.4; font-weight:700; transition:background-color .2s var(--ease); }
 .step-n svg { display:none; width:13px; height:13px; margin-inline-start:-3px; }
 .step.done .step-n { background:var(--ink); }
 .step.done .step-n svg { display:block; }
-.step-opt { padding:2px 8px; border:1px solid var(--line); border-radius:999px; font-family:var(--text); font-size:.75rem; line-height:1.4; font-weight:600; color:var(--muted); }
-.step-skip { flex:none; display:inline-flex; align-items:center; gap:2px; min-height:40px; margin-top:-7px; padding:0 6px 0 14px; border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--red-text); font-size:.875rem; line-height:1.3; font-weight:600; text-decoration:none; -webkit-tap-highlight-color:transparent; }
+.step-title { min-width:0; text-wrap:balance; }
+.step-meta { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.step-opt { white-space:nowrap; padding:2px 8px; border:1px solid var(--line); border-radius:999px; font-family:var(--text); font-size:.75rem; line-height:1.4; font-weight:600; color:var(--muted); }
+.step-skip { flex:none; display:inline-flex; align-items:center; gap:2px; min-height:44px; margin-inline-start:auto; padding:0 6px 0 14px; border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--red-text); font-size:.875rem; line-height:1.3; font-weight:600; text-decoration:none; -webkit-tap-highlight-color:transparent; }
 .step-skip svg { width:18px; height:18px; flex:none; }
 .step-skip:active { background:var(--ground); }
 html[dir="rtl"] .step-skip { padding:0 14px 0 6px; }
@@ -645,8 +648,8 @@ html[dir="rtl"] .pot-flow .choices > .item.choice.flagged { box-shadow:inset -3p
 html[dir="rtl"] .pot-flow .choices > .item.choice.flagged:has(> .pick[aria-checked="true"]) { box-shadow:inset -3px 0 0 var(--red-deep), inset 0 0 0 1px var(--red); }
 .pick { box-sizing:border-box; width:100%; display:grid; grid-template-columns:20px minmax(0, 1fr) auto; align-items:center; gap:12px; min-height:52px; padding:10px 14px; border:0; background:none; color:var(--ink); font:inherit; text-align:start; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .pick:focus-visible { outline:0; }
-.pick::before { content:""; box-sizing:border-box; width:20px; height:20px; border:2px solid var(--control); border-radius:50%; background:var(--surface); transition:border-color .15s var(--ease), border-width .15s var(--ease); }
-.pick[aria-checked="true"]::before { border:6px solid var(--red); }
+.pick::before { content:""; box-sizing:border-box; width:20px; height:20px; border:2px solid var(--control); border-radius:50%; background:var(--surface); transition:border-color .15s var(--ease), box-shadow .15s var(--ease); }
+.pick[aria-checked="true"]::before { border-color:var(--red); box-shadow:inset 0 0 0 4px var(--red); }
 .pick-name { display:grid; gap:2px; min-width:0; font-weight:600; font-size:.9375rem; line-height:1.3; }
 .pick-name small { font-weight:400; font-size:.8125rem; line-height:1.35; color:var(--body); }
 .pick .price { font-weight:700; white-space:nowrap; }
@@ -666,7 +669,7 @@ html[dir="rtl"] .pot-flow .choices > .item.choice.flagged:has(> .pick[aria-check
 .pick-add[aria-pressed="true"] .on { display:inline-flex; color:var(--red-deep); }
 /* The end of the flow: one large button to show the order. */
 .flow-end { margin:28px 0 4px; }
-.show-order { box-sizing:border-box; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; min-height:54px; padding:10px 18px; border:0; border-radius:14px; background:var(--red); color:#FFFFFF; font:inherit; font-size:1.0625rem; line-height:1.3; font-weight:700; cursor:pointer; box-shadow:0 6px 16px #E5333333; -webkit-tap-highlight-color:transparent; transition:transform .12s var(--ease), background-color .15s var(--ease); }
+.show-order { box-sizing:border-box; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; min-height:54px; padding:10px 18px; border:0; border-radius:14px; background:var(--red); color:#FFFFFF; font:inherit; font-size:1.0625rem; line-height:1.3; font-weight:700; cursor:pointer; box-shadow:0 6px 16px #00000026; -webkit-tap-highlight-color:transparent; transition:transform .12s var(--ease), background-color .15s var(--ease); }
 .show-order svg { width:22px; height:22px; flex:none; }
 .show-order:active { background:var(--red-deep); transform:scale(.985); }
 .show-order:focus-visible { outline:3px solid var(--red-deep); outline-offset:3px; }
@@ -710,6 +713,7 @@ html[dir="rtl"] .swipe-step.prev svg { transform:none; }
 .swipe-step:disabled { opacity:.35; cursor:default; }
 @media (min-width: 900px) { .swipe-step.prev { inset-inline-start:-58px; } .swipe-step.next { inset-inline-end:-58px; } }
 @media (hover: hover) and (pointer: fine) { .swipe.scrolls .swipe-step { display:grid; } }
+@media (min-width: 720px) { .pot-flow .protein-row { -webkit-mask-image:linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent); mask-image:linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent); } }
 @media print { .pot-flow .protein-row { display:block; margin:0; padding:0; overflow:visible; } .pot-flow .protein-row > .item { margin:0 0 8px; break-inside:avoid; } .swipe-step { display:none !important; } }
 .pot-premium { margin:28px 0 0; padding-top:18px; border-top:2px solid var(--ink); }
 .pot-premium h4 { display:inline-block; margin:0; padding:3px 10px; border:1.5px solid var(--ink); border-radius:6px; font-family:var(--display); font-size:1rem; line-height:1.3; font-weight:700; letter-spacing:.04em; color:var(--ink); }
@@ -745,12 +749,12 @@ body.end-in-view .pot-bar:not(.open) .pot-row > .pot-show { visibility:hidden; }
 .pot-track i { flex:1; height:6px; border-radius:3px; background:#FFFFFF2E; transition:background-color .2s var(--ease); }
 .pot-track i.skippable { background:none; box-shadow:inset 0 0 0 1px #FFFFFF4D; }
 .pot-track i.on { background:var(--red); box-shadow:none; }
-.pot-track i.skippable.on { background:#FFFFFF8C; }
+.pot-track i.passed { background:#FFFFFF59; box-shadow:none; }
 .pot-count { flex:1 1 auto; min-width:0; }
-.meal { max-height:min(40vh, 380px); overflow-y:auto; overscroll-behavior:contain; margin:8px 0 0; border-top:1px solid #FFFFFF26; }
+.meal { max-height:min(40vh, 380px); overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#FFFFFF40 transparent; margin:8px 0 0; border-top:1px solid #FFFFFF26; }
 .meal-list { list-style:none; margin:0; padding:0; }
 .meal-row { display:grid; grid-template-columns:minmax(0, 1fr) auto; align-items:center; column-gap:12px; min-height:48px; border-bottom:1px solid #FFFFFF1A; }
-.meal-list.has-x .meal-row { grid-template-columns:minmax(0, 1fr) auto 32px; }
+.meal-list.has-x .meal-row { grid-template-columns:minmax(0, 1fr) auto 40px; }
 .meal-link { display:grid; gap:1px; padding:7px 0; color:#FFFFFF; text-decoration:none; -webkit-tap-highlight-color:transparent; }
 .meal-lab { font-size:.75rem; line-height:1.3; color:#FFFFFFA6; }
 .meal-name { font-size:.9375rem; line-height:1.35; font-weight:600; }
@@ -759,7 +763,7 @@ body.end-in-view .pot-bar:not(.open) .pot-row > .pot-show { visibility:hidden; }
 html[dir="rtl"] .meal-name svg { transform:scaleX(-1); }
 .meal-price { font-size:.9375rem; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .meal-price.soft { font-size:.8125rem; font-weight:400; color:#FFFFFFA6; }
-.meal-x { display:grid; place-items:center; width:32px; height:40px; padding:0; border:0; border-radius:8px; background:none; color:#FFFFFFB3; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.meal-x { display:grid; place-items:center; width:40px; height:44px; padding:0; border:0; border-radius:8px; background:none; color:#FFFFFFB3; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .meal-x svg { width:14px; height:14px; }
 .meal-x:active { background:#FFFFFF1F; }
 .meal-total { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin:10px 0 0; font-size:1rem; line-height:1.4; font-weight:700; }
@@ -897,7 +901,7 @@ const ICON = {
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"/></svg>',
   x: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>'
 };
-const state = { lang: "en", avoid: new Set(), hide: false, detected: false, daypart: "all", pot: { broth: null, rice: null, noodle: null, protein: null, size: null, sides: [], adds: [] } };
+const state = { lang: "en", avoid: new Set(), hide: false, detected: false, daypart: "all", pot: { broth: null, rice: null, noodle: null, protein: null, size: null, sides: [], adds: [], skipped: [] } };
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const S_EN = DATA.strings.en;
@@ -1171,10 +1175,10 @@ function choiceHTML(g, o) {
     <button class="pick" type="button" role="radio" aria-checked="${on}" data-group="${g.id}" data-id="${o.id}"><span class="pick-name">${prose(t(k + ".name"))}${has(k + ".desc") ? `<small>${prose(t(k + ".desc"))}</small>` : ""}${tags}</span>${pr ? priceHTML(pr) : `<span class="price included">${prose(t("ui.included"))}</span>`}</button>${own.length ? `<p class="al"><b>${prose(t("ui.contains"))}:</b> ${listNames(own)}</p>` : ""}${derivedHTML(o)}
   </li>`;
 }
-/* One step of the flow: its number (a check once it has a pick), its title, Optional when it can be passed over, and
-   Skip to the step after it. */
+/* One step of the flow: its number (a check once it has a pick) beside its title, and for a step that can be passed
+   over, a row under them with Optional and Skip to what follows. */
 function stepHTML(n, id, title, body, optional, skipTo) {
-  return `<li class="step${optional ? " optional" : ""}" id="step-${id}"><div class="step-top"><h3 class="step-head" id="h-step-${id}"><span class="step-n">${ICON.check}${prose(t("ui.step").replace("{n}", n))}</span><span>${title}</span>${optional ? `<span class="step-opt">${prose(t("ui.optional"))}</span>` : ""}</h3>${skipTo ? `<a class="step-skip" href="#${skipTo}" data-step="${skipTo}">${prose(t("ui.skipStep"))}${ICON.chevron}</a>` : ""}</div>${body}</li>`;
+  return `<li class="step${optional ? " optional" : ""}" id="step-${id}"><div class="step-top"><h3 class="step-head" id="h-step-${id}"><span class="step-n">${ICON.check}${prose(t("ui.step").replace("{n}", n))}</span><span class="step-title">${title}</span></h3>${optional || skipTo ? `<div class="step-meta">${optional ? `<span class="step-opt">${prose(t("ui.optional"))}</span>` : ""}${skipTo ? `<a class="step-skip" href="#${skipTo}" data-step="${skipTo}">${prose(t("ui.skipStep"))}${ICON.chevron}</a>` : ""}</div>` : ""}</div>${body}</li>`;
 }
 const HAS_STARTERS = DATA.structure.sections.some(s => s.id === "starters");
 /* The chain's order: a starter first if the table wants one, then the pot. Starters keep their own section (and their
@@ -1198,10 +1202,10 @@ function potHTML(sec) {
   const row = items => `<div class="swipe"><ul class="items protein-row">${items.map(it => itemHTML(it, "item", inPot(it))).join("")}</ul><button class="swipe-step prev" type="button" tabindex="-1" aria-hidden="true" data-dir="-1">${ICON.chevron}</button><button class="swipe-step next" type="button" tabindex="-1" aria-hidden="true" data-dir="1">${ICON.chevron}</button></div>`;
   const prem = premium ? `<div class="pot-premium" id="sec-premium"><h4>${prose(t("sec.premium.title"))}</h4>${premium.noteKey ? `<p class="intro small">${prose(t(premium.noteKey))}</p>` : ""}${row(premium.items)}</div>` : "";
   const protein = step(first + POT_GROUPS.length, "protein", prose(t("ui.pickProtein")), `${row(sec.items)}${prem}`);
-  const finish = soup ? step(first + POT_GROUPS.length + 1, "soup", prose(t("ui.soupItUp")), `<ul class="items">${itemHTML(soup, "item", "add")}</ul>`, true) : "";
+  const finish = soup ? step(first + POT_GROUPS.length + 1, "soup", prose(t("ui.soupItUp")), `<ul class="items">${itemHTML(soup, "item", "add")}</ul>`, true, "flow-end") : "";
   return `<section class="menu pot-flow${shown.some(it => DATA.photos[it.id]) ? " has-photos" : ""}" id="sec-${sec.id}" aria-labelledby="h-${sec.id}">
     <header><h2 id="h-${sec.id}">${prose(t(`sec.${sec.id}.title`))}</h2></header>${sec.noteKey ? `<p class="intro section-note">${prose(t(sec.noteKey))}</p>` : ""}<p class="intro small pot-hint">${prose(t("ui.potHint"))}</p>
-    <ol class="pot-steps">${groups.join("")}${protein}${finish}</ol><div class="flow-end"><button class="show-order" type="button" data-show-order>${ICON.receipt}${prose(t("ui.showOrder"))}</button></div><p class="empty" hidden>${prose(t("ui.sectionHidden"))}</p>
+    <ol class="pot-steps">${groups.join("")}${protein}${finish}</ol><div class="flow-end" id="flow-end"><button class="show-order" type="button" data-show-order>${ICON.receipt}${prose(t("ui.showOrder"))}</button></div><p class="empty" hidden>${prose(t("ui.sectionHidden"))}</p>
   </section>`;
 }
 function pickFromEvent(e) {
@@ -1210,7 +1214,7 @@ function pickFromEvent(e) {
   const show = e.target.closest("[data-show-order]");
   if (show) { openOrder(e.detail === 0); return; }
   const skip = e.target.closest(".step-skip");
-  if (skip) { e.preventDefault(); focusMenuTarget(skip.dataset.step, true); return; }
+  if (skip) { e.preventDefault(); const from = skip.closest(".step").id.slice(5); if (!state.pot.skipped.includes(from)) state.pot.skipped.push(from); syncPot(); focusMenuTarget(skip.dataset.step, true); return; }
   const b = e.target.closest(".pick, .pick-size"); if (!b) return;
   const p = state.pot;
   if (b.classList.contains("pick")) { const g = b.dataset.group; p[g] = p[g] === b.dataset.id ? null : b.dataset.id; }
@@ -1231,7 +1235,7 @@ function pickFromEvent(e) {
 let potOpen = false;
 const POT_LABEL = { broth: "ui.potBase", rice: "ui.potRice", noodle: "ui.potNoodle" };
 const STARTER_IDS = (DATA.structure.sections.find(s => s.id === "starters") || { items: [] }).items.map(it => it.id);
-const emptyPot = () => ({ broth: null, rice: null, noodle: null, protein: null, size: null, sides: [], adds: [] });
+const emptyPot = () => ({ broth: null, rice: null, noodle: null, protein: null, size: null, sides: [], adds: [], skipped: [] });
 /* The order reads like the ticket the server writes: one row per step with its pick and price, an open row where a
    step still needs a pick, and a remove handle on what was added whole. The bar and Show Your Order share it. */
 function mealState() {
@@ -1260,7 +1264,13 @@ function mealState() {
   });
   if (p.adds.includes(POT_SOUP)) whole(prose(t("ui.soupItUp")), POT_SOUP, "step-soup");
   const req = [...POT_GROUPS.map(g => g.id), "protein"], missing = POT_GROUPS.find(g => !p[g.id]);
-  return { done, rows, req, n: req.filter(id => done[id]).length, list: ORDER.filter(a => tags.has(a)), total: priced && total > 0 ? ltr(money(total)) : "",
+  /* The counter counts every step. An optional one counts once it has a pick, was skipped, or was passed: the starters
+     once the pot is begun, the porridge once the pot is complete. So it reads 6 of 6 exactly when the order is ready. */
+  const steps = [...(HAS_STARTERS ? ["starters"] : []), ...req, ...(potItem(POT_SOUP) ? ["soup"] : [])];
+  const begun = POT_GROUPS.some(g => p[g.id]) || !!p.protein, complete = req.every(id => done[id]);
+  const settled = { ...done, starters: done.starters || p.skipped.includes("starters") || begun, soup: done.soup || p.skipped.includes("soup") || complete };
+  const dish = !!p.protein || p.adds.length > 0 || p.sides.length > 0;
+  return { done, settled, steps, rows, req, n: steps.filter(id => settled[id]).length, list: ORDER.filter(a => tags.has(a)), total: priced && dish && total > 0 ? ltr(money(total)) : "",
     any: POT_GROUPS.some(g => p[g.id]) || !!p.protein || p.sides.length > 0 || p.adds.length > 0, missing, nextId: missing ? missing.id : p.protein ? "" : "protein" };
 }
 const containsLine = list => list.length ? `<p class="al"><b>${prose(t("ui.contains"))}:</b> ${listNames(list)}</p>` : "";
@@ -1273,14 +1283,14 @@ function syncPot() {
   document.querySelectorAll("#main .step").forEach(s => s.classList.toggle("done", !!m.done[s.id.slice(5)]));
   bar.hidden = !m.any; document.body.classList.toggle("has-pot", m.any);
   if (!m.any) { potOpen = false; document.documentElement.style.setProperty("--pot-h", "0px"); return; }
-  const track = [...(HAS_STARTERS ? ["starters"] : []), ...m.req, ...(potItem(POT_SOUP) ? ["soup"] : [])].map(id => `<i class="${m.done[id] ? "on" : ""}${m.req.includes(id) ? "" : " skippable"}"></i>`).join("");
+  const track = m.steps.map(id => `<i class="${m.done[id] ? "on" : m.settled[id] ? "passed" : ""}${m.req.includes(id) ? "" : " skippable"}"></i>`).join("");
   const next = m.nextId ? `<a class="pot-next" href="#step-${m.nextId}" data-step="step-${m.nextId}">${prose(t("ui.potNext").replace("{step}", t(m.missing ? "group." + m.missing.id + ".name" : "ui.pickProtein")))}${ICON.chevron}</a>` : "";
   const clear = `<button class="pot-clear" type="button" id="potClear">${prose(t("ui.clear"))}</button>`;
   const show = cls => `<button class="${cls}" type="button" data-show-order>${prose(t("ui.showOrder"))}</button>`;
   const rowHTML = r => `<li class="meal-row${r.name ? "" : " missing"}"><a class="meal-link" href="#${r.step}" data-step="${r.step}">${r.lab ? `<span class="meal-lab">${r.lab}</span>` : ""}<span class="meal-name">${r.name || prose(t("ui.choose")) + ICON.chevron}</span></a>${r.price ? `<span class="meal-price${r.soft ? " soft" : ""}">${r.price}</span>` : "<span></span>"}${r.remove ? `<button class="meal-x" type="button" data-remove="${r.remove}" aria-label="${esc(plain(t("ui.remove").replace("{name}", r.label)))}">${ICON.x}</button>` : ""}</li>`;
   bar.setAttribute("aria-label", t("ui.yourOrder"));
   bar.classList.toggle("open", potOpen);
-  bar.innerHTML = `<div class="wrap"><div class="pot-row"><div class="pot-head"><b class="pot-title">${prose(t("ui.yourOrder"))}</b>${m.total ? `<span class="pot-total">${m.total}</span>` : ""}</div>${next || show("pot-show")}</div><button class="pot-sum" type="button" aria-expanded="${potOpen}" aria-controls="potMore"><span class="pot-track" aria-hidden="true">${track}</span><span class="pot-count">${prose(t("ui.stepsDone").replace("{n}", m.n).replace("{total}", m.req.length))}</span>${ICON.chevron}</button><div class="pot-more" id="potMore"><div><div class="meal"><ul class="meal-list${m.rows.some(r => r.remove) ? " has-x" : ""}">${m.rows.map(rowHTML).join("")}</ul></div>${m.total ? `<p class="meal-total"><span>${prose(t("ui.total"))}</span><b>${m.total}</b></p>` : ""}${containsLine(m.list)}<p class="pot-acts">${clear}${next ? show("pot-show quiet") : ""}</p></div></div></div>`;
+  bar.innerHTML = `<div class="wrap"><div class="pot-row"><div class="pot-head"><b class="pot-title">${prose(t("ui.yourOrder"))}</b>${m.total ? `<span class="pot-total">${m.total}</span>` : ""}</div>${next || show("pot-show")}</div><button class="pot-sum" type="button" aria-expanded="${potOpen}" aria-controls="potMore"><span class="pot-track" aria-hidden="true">${track}</span><span class="pot-count">${prose(t("ui.stepsDone").replace("{n}", m.n).replace("{total}", m.steps.length))}</span>${ICON.chevron}</button><div class="pot-more" id="potMore"><div><div class="meal"><ul class="meal-list${m.rows.some(r => r.remove) ? " has-x" : ""}">${m.rows.map(rowHTML).join("")}</ul></div>${m.total ? `<p class="meal-total"><span>${prose(t("ui.total"))}</span><b>${m.total}</b></p>` : ""}${containsLine(m.list)}<p class="pot-acts">${clear}${next ? show("pot-show quiet") : ""}</p></div></div></div>`;
   $("potClear").addEventListener("click", () => { state.pot = emptyPot(); syncPot(); $("step-" + (POT_GROUPS[0] || {}).id)?.querySelector(".pick")?.focus({ preventScroll: true }); });
   bar.querySelector(".pot-next")?.addEventListener("click", e => { e.preventDefault(); focusMenuTarget(e.currentTarget.dataset.step, true); });
   bar.querySelector(".pot-sum").addEventListener("click", () => { potOpen = !potOpen; bar.classList.toggle("open", potOpen); bar.querySelector(".pot-sum").setAttribute("aria-expanded", potOpen); });
