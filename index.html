@@ -891,7 +891,7 @@ Object.assign(DATA.strings, TRANSLATIONS);
 const LANG_FILES = {};
 const LANG_LOADS = {};
 const haveLang = code => !!DATA.strings[code];
-const knownLang = code => haveLang(code) || !!LANG_FILES[code];
+const knownLang = code => LANGS.some(l => l.code === code) && (haveLang(code) || !!LANG_FILES[code]);
 function loadLang(code) {
   if (haveLang(code)) return Promise.resolve(true);
   if (!LANG_FILES[code]) return Promise.resolve(false);
