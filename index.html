@@ -812,7 +812,7 @@ html[dir="rtl"] .order-row.flagged { box-shadow:inset -3px 0 0 var(--red-deep); 
 html[dir="rtl"] .cat-row { -webkit-mask-image:linear-gradient(270deg, #000 calc(100% - 24px), transparent); mask-image:linear-gradient(270deg, #000 calc(100% - 24px), transparent); }
 .cat-row::-webkit-scrollbar { display:none; }
 .cat { flex:none; min-height:44px; padding:0 14px; border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--ink); font:inherit; font-size:.875rem; line-height:1.2; font-weight:600; cursor:pointer; -webkit-tap-highlight-color:transparent; }
-.cat:last-child { margin-inline-end:20px; }
+.cat:last-child { margin-inline-end:24px; }
 .cat:active, .see-all:active { background:var(--ground); }
 .see-all { flex:none; margin-inline-end:6px; display:inline-flex; align-items:center; gap:6px; min-height:44px; padding:0 14px 0 12px; border:1px solid var(--line); border-radius:999px; background:var(--surface); color:var(--red-text); font:inherit; font-size:.875rem; line-height:1.2; font-weight:600; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .see-all svg { width:18px; height:18px; flex:none; }
@@ -1265,7 +1265,7 @@ const DATA = {"structure":{"allergens":["milk","egg","fish","shellfish","peanut"
 const TRANSLATIONS = {};
 Object.assign(DATA.strings, TRANSLATIONS);
 /* English is inline; each other dictionary is fetched only when chosen. */
-const LANG_FILES = {"es":"i18n/es.json?v=3c7277da","vi":"i18n/vi.json?v=8fa4f034","ko":"i18n/ko.json?v=ecf5a47f","zh":"i18n/zh.json?v=46bb8a99","zh-Hant":"i18n/zh-Hant.json?v=88b6693f","tl":"i18n/tl.json?v=2eb4e317","fa":"i18n/fa.json?v=cfa07fdf","ar":"i18n/ar.json?v=05001dd4","ja":"i18n/ja.json?v=689d21f7","ru":"i18n/ru.json?v=cd2c100d","hi":"i18n/hi.json?v=2024faf3","ur":"i18n/ur.json?v=86bd60ef"};
+const LANG_FILES = {"es":"i18n/es.json?v=3c7277da","vi":"i18n/vi.json?v=8fa4f034","ko":"i18n/ko.json?v=ecf5a47f","zh":"i18n/zh.json?v=fcf66442","zh-Hant":"i18n/zh-Hant.json?v=d2de2f61","tl":"i18n/tl.json?v=2eb4e317","fa":"i18n/fa.json?v=d424602d","ar":"i18n/ar.json?v=375aec31","ja":"i18n/ja.json?v=689d21f7","ru":"i18n/ru.json?v=cd2c100d","hi":"i18n/hi.json?v=2024faf3","ur":"i18n/ur.json?v=86bd60ef"};
 const LANG_LOADS = {};
 const haveLang = code => !!DATA.strings[code];
 const knownLang = code => LANGS.some(l => l.code === code) && (haveLang(code) || !!LANG_FILES[code]);
@@ -1384,6 +1384,9 @@ function framingStyle(path) {
        bands of the picture before it. */
     `;--photo-bg-top:${f.backgroundTop || f.background};--photo-bg-bot:${f.backgroundBottom || f.background}`;
 }
+/* The shared print renderer passes each print photo through photoTileHTML, which draws the brand menus' blurred
+   backdrops; no Tabu frame has one, so the photo prints as the plain image. */
+function photoTileHTML(markup) { return markup; }
 /* AVIF and WebP derivatives beside each JPEG; the JPEG stays the fallback. Densities are
    computed against the box the photo fills, so one thumbnail serves 84px tiles and 76px shots. */
 function pictureHTML(path, box, attrs) {
@@ -2464,7 +2467,7 @@ addEventListener("orientationchange", syncBarHeight, { passive:true });
 /* The current section is read straight from the layout on every scroll frame rather than
    watched with an IntersectionObserver: a thin observer band can be crossed entirely between
    two samples during a flick, which leaves the previous chip highlighted. */
-let spyRaf = 0;
+let spyRaf = 0, spyOwed = false;
 function currentSection() {
   const line = innerHeight * .38;
   let cur = null;
@@ -2479,11 +2482,15 @@ function observeSections() {
   const cur = currentSection();
   document.querySelectorAll("#jumpRow a").forEach(a => {
     if (a.getAttribute("href") === "#" + cur) {
-      if (!a.hasAttribute("aria-current")) { a.setAttribute("aria-current", "location"); const row = $("jumpRow"), ar = a.getBoundingClientRect(), rr = row.getBoundingClientRect(); row.scrollLeft += ar.left - rr.left - (rr.width - ar.width) / 2; }
+      if (!a.hasAttribute("aria-current")) { a.setAttribute("aria-current", "location"); spyOwed = true; }
+      // A control in the strip that holds keyboard focus keeps its place; the current chip is centred once it lets go.
+      const row = $("jumpRow"), f = document.activeElement;
+      if (spyOwed && !(row.contains(f) && f.matches(":focus-visible"))) { spyOwed = false; const ar = a.getBoundingClientRect(), rr = row.getBoundingClientRect(); row.scrollLeft += ar.left - rr.left - (rr.width - ar.width) / 2; }
     } else a.removeAttribute("aria-current");
   });
 }
 function scheduleSpy() { if (!spyRaf) spyRaf = requestAnimationFrame(observeSections); }
+$("jumpRow").addEventListener("focusout", () => { if (spyOwed) scheduleSpy(); });
 addEventListener("scroll", scheduleSpy, { passive: true });
 addEventListener("resize", scheduleSpy);
 /* The section strip fades at the edge that hides more pills (the owner, 2026-09-19). */
@@ -2564,6 +2571,13 @@ window.addEventListener("popstate", () => {
   document.querySelectorAll("dialog[open]").forEach(d => { if (!st || st.modal !== d.id || st.k !== d.dataset.k) closeDialog(d, true); });
   runNext();
 });
+/* Under the page's smooth scrolling Chrome animates a Back or Forward return, about a second on this menu, and a
+   second Back or Forward inside it lands short (Safari returns at once). A return lands at once; the next tap or key
+   gives a tapped link its smooth jump again. */
+if (window.navigation) {
+  navigation.addEventListener("navigate", e => { if (e.navigationType === "traverse") document.documentElement.style.scrollBehavior = "auto"; });
+  for (const type of ["keydown", "click"]) addEventListener(type, () => document.documentElement.style.removeProperty("scroll-behavior"), true);
+}
 document.querySelectorAll("dialog").forEach(dlg => {
   dlg.addEventListener("cancel", e => { e.preventDefault(); closeDialog(dlg); });
   /* A press that starts on the sheet and ends on the backdrop (a mouse drag) clicks the dialog itself,
@@ -2963,6 +2977,28 @@ document.addEventListener("focusin", e => {
     const r = e.target.getBoundingClientRect(), top = menuTop(), bottom = $("potBar").hidden ? innerHeight : $("potBar").getBoundingClientRect().top;
     if (r.bottom <= top) window.scrollBy({ top:r.top - top - 8, behavior:"instant" });
     else if (r.top >= bottom) window.scrollBy({ top:Math.min(r.bottom - bottom + 8, r.top - top - 8), behavior:"instant" });
+  });
+});
+/* Native focus scrolling also leaves a control that is already partly inside a sideways row, so a Tab can stop on a
+   chip or card mostly past the row's edge or under its fade. The sizes are each row's fades (start, end); protein
+   cards line up with their snap padding. */
+const ROW_EDGES = [["#jumpRow", 40, 40], [".cat-row", 0, 24], [".protein-row", 16, 16]];
+function revealAcross(el) {
+  const edge = ROW_EDGES.find(([sel]) => el.closest(sel)), row = edge && el.closest(edge[0]), item = row && [...row.children].find(c => c.contains(el));
+  if (!item || row.scrollWidth <= row.clientWidth + 1) return;
+  const rtl = getComputedStyle(row).direction === "rtl", box = row.getBoundingClientRect(), r = item.getBoundingClientRect();
+  let left = box.left + (rtl ? edge[2] : edge[1]), right = box.right - (rtl ? edge[1] : edge[2]);
+  // At large text a chip can be wider than the fade-free part; it then only has to fit the row, start edge first.
+  const wide = r.width > right - left;
+  if (wide) { left = box.left; right = box.right; }
+  if (r.left >= left - 1 && r.right <= right + 1) return;
+  const dx = wide || row.matches(".protein-row") ? (rtl ? r.right - right : r.left - left) : r.left < left ? r.left - left : r.right - right;
+  row.scrollBy({ left: dx, behavior: "instant" });
+}
+document.addEventListener("focusin", e => {
+  if (!focusKeyboard || !e.target.matches("button, a, input, select, textarea, summary")) return;
+  requestAnimationFrame(() => {
+    if (document.activeElement === e.target) revealAcross(e.target);
   });
 });
 /* A short receipt total can stay in view, but never over a control or Contains. Text size and late fonts change
