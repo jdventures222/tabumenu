@@ -1,7 +1,7 @@
 {
- "name": "Tabu Shabu",
+ "name": "Tabu Shabu Orange · Hot Pot Menu",
  "short_name": "Tabu Shabu",
- "description": "Swish, dip, and repeat · 111 S Glassell St, Orange, CA 92866",
+ "description": "Shabu-shabu in Orange. Choose your broth, noodles and protein, then show your order to your server. 111 S Glassell St, Orange, CA 92866.",
  "start_url": "./",
  "display": "minimal-ui",
  "lang": "en",
