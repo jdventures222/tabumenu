@@ -1164,6 +1164,23 @@ body.has-pot { padding-bottom:var(--pot-h, 0px); }
 /* The bar's spoken status line (sayPot), off screen the way the skip link is; and Link copied rises above the bar. */
 .pot-say { position:absolute; inset-inline-start:-9999px; top:8px; margin:0; }
 body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
+/* The full-size sample never follows the compact layout or the guest's picks. */
+.crowd-measure { position:fixed; inset:0 0 auto; visibility:hidden; pointer-events:none; z-index:-1; }
+.crowd-measure .bar, .crowd-measure .pot-bar { position:relative; inset:auto; margin:0; max-height:none; overflow:visible; transition:none; }
+.crowd-measure .row { grid-column:1 / -1; min-width:0; }
+.crowd-measure .menu-tool { white-space:normal; overflow-wrap:break-word; }
+.crowd-measure .bar-logo > span { width:48px; height:36px; }
+@media screen {
+  html.roomy #bar { position:relative; margin-bottom:0; }
+  html.roomy #bar .wrap { grid-template-rows:0px; }
+  html.roomy #bar .bar-logo { opacity:0; visibility:hidden; }
+  html.roomy #jumpRow :is(#sectionBtn, #searchBtn) { align-self:center; opacity:1; visibility:visible; white-space:nowrap; height:44px; line-height:1; padding:0 14px; }
+  html.roomy[lang="ur"] #jumpRow :is(#sectionBtn, #searchBtn) { height:auto; line-height:2.6; padding-block:6px; }
+  html.roomy #potBar:not(.open) :is(.pot-title, .pot-progress) { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0, 0, 0, 0); white-space:nowrap; }
+  html.roomy #potBar:not(.open) .pot-sum { display:flex; min-height:44px; padding-block:6px; }
+  html.roomy #potBar:not(.open) .pot-track { flex:1; width:auto; }
+}
+@media print { .crowd-measure { display:none; } }
 @media print { .pot-bar, .starter-pots, .saved-pots, .pot-hint, .pot-peanut, .pick::before, .step-skip, .pick-add, .flow-end, .pot-cats, .pick-one, .seg-size:not([aria-checked="true"]) { display:none !important; } .pot-size { display:block; padding:0; background:none; } .seg-size { min-height:0; padding:0; box-shadow:none !important; text-align:start; font-weight:700; } .pick { grid-template-columns:minmax(0, 1fr) auto; } .choices.tiles, .choices.tiles .pick { grid-template-columns:minmax(0, 1fr); } .choices.tiles .pick .price { grid-column:1; } }
 
   /* A linked dish the filter hides (openLinkedDish); the pill back to search results; the copied-link toast;
@@ -1740,7 +1757,7 @@ function pickFromEvent(e) {
      line included, sits above the bar, but never so far that the tapped button goes under the top bar. */
   if (!b.getClientRects().length) return;
   const bar = $("potBar"), r = (b.closest(".item") || b).getBoundingClientRect(), limit = innerHeight - bar.offsetHeight - 8;
-  const room = Math.max(0, b.getBoundingClientRect().top - $("bar").offsetHeight - 8);
+  const room = Math.max(0, b.getBoundingClientRect().top - menuTop() - 8);
   if (!bar.hidden && r.bottom > limit) scrollBy({ top: Math.min(r.bottom - limit, room), behavior: reduced ? "instant" : "smooth" });
 }
 /* potAsk: the pot a pending Clear / Remove question is about, as its index, the number of pots and its contents (false
@@ -2285,8 +2302,20 @@ function render() {
 /* The filter travels in the address (?avoid=peanut,shellfish[&hide=1]) so a table can share the menu they see:
    written on every change, read once on load where it outranks the saved choice, never stored by itself. */
 function syncAvoid(u) { const on = ORDER.filter(a => state.avoid.has(a)); if (on.length) u.searchParams.set("avoid", on.join(",")); else u.searchParams.delete("avoid"); if (on.length && state.hide) u.searchParams.set("hide", "1"); else u.searchParams.delete("hide"); }
-function syncFilterUrl() { const u = new URL(location.href); syncAvoid(u); history.replaceState(history.state, "", u); }
-function syncUrl() { const u = new URL(location.href); u.searchParams.set("lang", state.lang); history.replaceState(history.state, "", u); }
+function writeHistory(method, value, url = location.href) { try { history[method](value, "", url); return true; } catch (e) { return false; } }
+let addressPending = 0, addressTimer = 0, addressDelay = 1000;
+/* Retry the latest choices on the menu entry: a dialog's temporary entry disappears on close. */
+function syncAddress(part = 0) {
+  const deferred = openDlg() || modal.backs > 0 || !!modal.next;
+  addressPending |= part;
+  const u = new URL(location.href);
+  if (addressPending & 1) u.searchParams.set("lang", state.lang);
+  if (addressPending & 2) syncAvoid(u);
+  if (!deferred && (u.href === location.href || writeHistory("replaceState", history.state, u))) { clearTimeout(addressTimer); addressTimer = addressPending = 0; addressDelay = 1000; return; }
+  if (!addressTimer) { addressTimer = setTimeout(() => { addressTimer = 0; syncAddress(); }, addressDelay); addressDelay = Math.min(30000, addressDelay * 2); }
+}
+function syncFilterUrl() { syncAddress(2); }
+function syncUrl() { syncAddress(1); }
 let langRestore = 0, langRequest = 0;
 function langFailure(code) {
   const box = $("langFailure"), l = LANGS.find(l => l.code === code);
@@ -2306,6 +2335,7 @@ async function scrollToMenuStart(token) {
 function setLang(code, stay = false) {
   if (!LANGS.some(l => l.code === code)) return Promise.resolve(false);
   const request = ++langRequest;
+  if (code === state.lang && haveLang(code)) { document.documentElement.classList.remove("lang-loading"); store("tabu-shabu-lang", code); return Promise.resolve(true); }
   if (!haveLang(code)) {
     document.documentElement.classList.add("lang-loading");
     if ($("langFailure")) $("langFailure").hidden = true;
@@ -2326,7 +2356,7 @@ function setLang(code, stay = false) {
   if (returnId && $(returnId)) dlg.__returnFocus = $(returnId);
   const token = ++langRestore;
   if (stay) { if (reading) restoreReading(); else placeReading(...position); } else scrollToMenuStart(token);
-  if (dlg) { const after = dlg.__afterClose; dlg.__afterClose = () => { syncUrl(); if (after) after(); else if (!stay) scrollToMenuStart(token); }; }
+  if (dlg) dlg.__langClose = { token, stay };
   if (dlg?.id === "langSheet") { const focused = document.activeElement?.dataset.lang; dlg.innerHTML = langSheetHTML(); if (focused) dlg.querySelector(`[data-lang="${code}"]`)?.focus({ preventScroll: true }); }
   return Promise.resolve(true);
 }
@@ -2406,10 +2436,31 @@ function applyFilter() {
 /* --bar-h is the stuck bar's height even at the top of the page, where the tools row is folded, so a section
    reached from there lands below the bar that is then over it. */
 function syncBarHeight() {
+  syncRoomy();
   const bar = $("bar"), toolsH = Math.max(0, ...["sectionBtn", "searchBtn", "barLogo"].map(id => $(id)?.getBoundingClientRect().height || 0));
   bar.style.setProperty("--tools-h", toolsH + "px");
-  document.documentElement.style.setProperty("--bar-h", bar.getBoundingClientRect().height + (bar.classList.contains("scrolled") ? 0 : toolsH) + "px");
+  document.documentElement.style.setProperty("--bar-h", (document.documentElement.classList.contains("roomy") ? 0 : bar.getBoundingClientRect().height + (bar.classList.contains("scrolled") ? 0 : toolsH)) + "px");
 }
+function crowdSampleHTML() {
+  return `<nav class="bar scrolled"><div class="wrap"><button class="menu-tool" type="button" tabindex="-1">${prose(t("ui.sections"))}</button><span class="bar-logo"><span></span></span><button class="menu-tool" type="button" tabindex="-1">${prose(t("ui.search"))}</button><div class="row"><span class="chip">${prose(t("ui.language"))}</span></div></div></nav><aside class="pot-bar"><div class="wrap"><div class="pot-row"><div class="pot-head"><b class="pot-title">${prose(t("ui.yourOrder"))}</b><span class="pot-total">${ltr(money(30))}</span></div><button class="pot-show" type="button" tabindex="-1"><span>${prose(t("ui.showOrder"))}</span></button></div><button class="pot-sum" type="button" tabindex="-1"><span class="pot-track" aria-hidden="true">${"<i></i>".repeat(5)}</span><span class="pot-progress"><span class="pot-count">${prose(t("ui.stepsDone").replace("{n}", 5).replace("{total}", 5))}</span></span>${ICON.chevron}</button></div></aside>`;
+}
+function syncRoomy() {
+  if (!$("sectionBtn")) return;
+  let sample = $("crowdMeasure");
+  if (!sample) { sample = document.createElement("div"); sample.id = "crowdMeasure"; sample.className = "crowd-measure"; sample.setAttribute("aria-hidden", "true"); document.body.append(sample); barSizes?.observe(sample); }
+  if (sample.dataset.lang !== state.lang) { sample.innerHTML = crowdSampleHTML(); sample.dataset.lang = state.lang; }
+  const roomy = sample.getBoundingClientRect().height >= innerHeight * .44, row = $("jumpRow"), sections = $("sectionBtn"), search = $("searchBtn"), focus = document.activeElement;
+  document.documentElement.classList.toggle("roomy", roomy);
+  /* Sharing the chip row keeps the folded header's footprint, including when the mode changes mid-menu. */
+  if (roomy !== (sections.parentElement === row)) {
+    [sections, search].forEach(b => { b.classList.toggle("chip", roomy); b.classList.toggle("tool", roomy); });
+    if (roomy) row.prepend(sections, search); else { $("barLogo").before(sections); $("barLogo").after(search); }
+    if (focus === sections || focus === search) { const next = roomy || $("bar").classList.contains("scrolled") ? focus : $("langBtn"); next.focus({ preventScroll:true }); next.scrollIntoView({ block:"nearest", inline:"nearest" }); }
+  }
+}
+const menuTop = () => document.documentElement.classList.contains("roomy") ? 0 : $("bar").offsetHeight;
+addEventListener("resize", syncBarHeight, { passive:true });
+addEventListener("orientationchange", syncBarHeight, { passive:true });
 /* The current section is read straight from the layout on every scroll frame rather than
    watched with an IntersectionObserver: a thin observer band can be crossed entirely between
    two samples during a flick, which leaves the previous chip highlighted. */
@@ -2457,7 +2508,7 @@ fadeStrips();
    platform does not expose, and the cost here is one extra tap. */
 let modalSeq = 0;
 const modal = { backs: 0, next: null, guard: 0 };
-if (history.state && history.state.modal) { const { modal, k, ...rest } = history.state; history.replaceState(rest, "", location.href); }
+if (history.state && history.state.modal) { const { modal, k, ...rest } = history.state; writeHistory("replaceState", rest); }
 function syncModalClass() { document.documentElement.classList.toggle("modal", !!document.querySelector("dialog[open]")); }
 const openDlg = () => document.querySelector("dialog[open]");
 function runNext() {
@@ -2475,10 +2526,10 @@ function openDialog(dlg, adopt) {
   if (dlg.open) return;
   hideBackToResults();
   dlg.showModal(); syncModalClass();
-  const k = String(++modalSeq); dlg.dataset.k = k;
+  const k = String(++modalSeq); delete dlg.dataset.k;
   keepReading();
   const st = { ...history.state, modal: dlg.id, k };
-  if (adopt && history.state && history.state.modal) history.replaceState(st, ""); else history.pushState(st, "");
+  if (writeHistory(adopt && history.state && history.state.modal ? "replaceState" : "pushState", st)) dlg.dataset.k = k;
 }
 function closeDialog(dlg, fromPop, instant) {
   if (!dlg.open || dlg.classList.contains("closing")) return;
@@ -2502,7 +2553,8 @@ function closeDialog(dlg, fromPop, instant) {
     dlg.classList.remove("closing"); dlg.close(); syncModalClass(); if (dlg.id === "filterSheet") syncFilterUrl();
     if (dlg.id === "lb") lbAfterClose();
     if (back && back.isConnected && !openDlg() && !modal.next) back.focus({ preventScroll: true });
-    const after = dlg.__afterClose; dlg.__afterClose = null; if (after) after();
+    const lang = dlg.__langClose; dlg.__langClose = null; if (lang) syncUrl(); else if (addressPending) syncAddress();
+    const after = dlg.__afterClose; dlg.__afterClose = null; if (after) after(); else if (lang && !lang.stay) scrollToMenuStart(lang.token);
     runNext();
   }, ms);
 }
@@ -2520,7 +2572,7 @@ document.querySelectorAll("dialog").forEach(dlg => {
   dlg.addEventListener("click", e => {
     if (e.target === dlg) { if (dlg.__downOnBackdrop) closeDialog(dlg); return; }
     const c = e.target.closest("[data-close]"); if (c) { closeDialog(dlg); return; }
-    const l = e.target.closest("[data-lang]"); if (l) { const code = l.dataset.lang; setLang(code).then(ok => { if (ok && dlg.open) { dlg.__afterClose = syncUrl; closeDialog(dlg); } }); return; }
+    const l = e.target.closest("[data-lang]"); if (l) { const code = l.dataset.lang; setLang(code).then(ok => { if (ok && dlg.open) closeDialog(dlg); }); return; }
     const a = e.target.closest("[data-avoid]"); if (a) { toggleAvoid(a.dataset.avoid); return; }
     if (e.target.closest("#hideBtn")) { state.hide = !state.hide; applyFilter(); syncFilterUrl(); return; }
     if (e.target.closest("#clearBtn")) { clearAvoid(); return; }
@@ -2582,7 +2634,7 @@ function focusMenuTarget(id, smooth) {
   const control = target.matches(".choice") ? target.querySelector(".pick") : target;
   if (control === target) target.setAttribute("tabindex", "-1");
   control.focus({preventScroll: true}); revealInRow(target);
-  window.scrollTo({top: Math.max(0, scrollY + target.getBoundingClientRect().top - $("bar").offsetHeight - 8), behavior: smooth && !reduced ? "smooth" : "instant"});
+  window.scrollTo({top: Math.max(0, scrollY + target.getBoundingClientRect().top - menuTop() - 8), behavior: smooth && !reduced ? "smooth" : "instant"});
 }
 function openSections(keyboard) {
   const links = [...document.querySelectorAll("section.menu")].filter(s => !s.hidden).map(s => `<a href="#${esc(s.id)}" data-menu-target="${esc(s.id)}">${esc(s.querySelector("h2").textContent)}</a>`).join("");
@@ -2896,9 +2948,23 @@ $("main").addEventListener("click", e => {
 
 /* The folded row's buttons grow with the guest's text size and late fonts while the bar keeps its height, so they
    are watched too; renderBar replaces them, and hands each new set to watchBarSizes. */
-const barSizes = "ResizeObserver" in window ? new ResizeObserver(syncBarHeight) : null;
-function watchBarSizes() { barSizes?.disconnect(); ["bar", "sectionBtn", "searchBtn", "barLogo"].forEach(id => $(id) && barSizes?.observe($(id))); }
+const barSizes = "ResizeObserver" in window ? new ResizeObserver(() => requestAnimationFrame(syncBarHeight)) : null;
+function watchBarSizes() { barSizes?.disconnect(); ["bar", "sectionBtn", "searchBtn", "barLogo", "crowdMeasure"].forEach(id => $(id) && barSizes?.observe($(id))); }
 watchBarSizes();
+/* Native focus scrolling can stop behind a fixed bar, especially at large text. */
+let focusKeyboard = false, focusInput = 0;
+addEventListener("keydown", e => { focusKeyboard = !e.altKey && !e.ctrlKey && !e.metaKey && /^(Tab|Home|End|Arrow)/.test(e.key); }, true);
+for (const type of ["pointerdown", "touchstart", "wheel"]) addEventListener(type, () => { focusInput++; if (type !== "wheel") focusKeyboard = false; }, { capture:true, passive:true });
+document.addEventListener("focusin", e => {
+  if (!focusKeyboard || !e.target.closest("#main") || !e.target.matches("button, a, input, select, textarea, summary")) return;
+  const y = scrollY, input = focusInput;
+  requestAnimationFrame(() => {
+    if (document.activeElement !== e.target || scrollY !== y || focusInput !== input) return;
+    const r = e.target.getBoundingClientRect(), top = menuTop(), bottom = $("potBar").hidden ? innerHeight : $("potBar").getBoundingClientRect().top;
+    if (r.bottom <= top) window.scrollBy({ top:r.top - top - 8, behavior:"instant" });
+    else if (r.top >= bottom) window.scrollBy({ top:Math.min(r.bottom - bottom + 8, r.top - top - 8), behavior:"instant" });
+  });
+});
 /* A short receipt total can stay in view, but never over a control or Contains. Text size and late fonts change
    its height without resizing the phone, and each sheet rewrite replaces the nodes being measured. */
 let totalFrame = 0;
@@ -2954,7 +3020,7 @@ if (sharedFilter.has("pot")) {
     else if (state.pots.length < POTS_MAX) { state.pots.push(shared.pot); state.at = state.pots.length - 1; }
     else { potFull = true; potLinked = false; }
   }
-  const u = new URL(location.href); u.searchParams.delete("pot"); history.replaceState(history.state, "", u);
+  const u = new URL(location.href); u.searchParams.delete("pot"); writeHistory("replaceState", history.state, u);
 }
 if (state.pot.protein && POT_SIZES.includes(state.pot.size)) potSize = state.pot.size;
 /* Keep the guest's place (finding 3): Back restores the scroll, a #item-<id> link opens on that dish, and a
@@ -2965,7 +3031,7 @@ const revealInRow = el => { if (el.closest(".protein-row")) el.scrollIntoView({ 
 function goToItem(id) {
   const target = $(id); if (!target || !target.getClientRects().length) return false;
   target.setAttribute("tabindex", "-1"); target.focus({ preventScroll: true }); revealInRow(target);
-  window.scrollTo({ top: Math.max(0, scrollY + target.getBoundingClientRect().top - $("bar").offsetHeight - 8), behavior: "instant" });
+  window.scrollTo({ top: Math.max(0, scrollY + target.getBoundingClientRect().top - menuTop() - 8), behavior: "instant" });
   return true;
 }
 function openLinkedDish() {
@@ -2986,7 +3052,7 @@ function openLinkedPot() {
 function holdItem(id) {
   const target = $(id), inputs = ["wheel", "touchstart", "pointerdown", "keydown"];
   let held = true;
-  const pin = () => { if (held && target.getClientRects().length) window.scrollTo({ top: Math.max(0, scrollY + target.getBoundingClientRect().top - $("bar").offsetHeight - 8), behavior: "instant" }); };
+  const pin = () => { if (held && target.getClientRects().length) window.scrollTo({ top: Math.max(0, scrollY + target.getBoundingClientRect().top - menuTop() - 8), behavior: "instant" }); };
   const heights = new ResizeObserver(pin);
   const release = () => { held = false; heights.disconnect(); clearTimeout(timer); inputs.forEach(type => removeEventListener(type, release, true)); };
   let timer = setTimeout(release, 10000);
@@ -3005,8 +3071,8 @@ function hiddenDishNote() {
 /* Share (findings 14, item 71): the menu from its Sections sheet, a dish from its photo, the pot from the order sheet
    and the open bar. The native share sheet where there is one, else the link goes to the clipboard and a toast says so.
    Only the pot link carries the pot. */
-function menuUrl() { const u = new URL(location.href); u.hash = ""; u.searchParams.delete("pot"); return u.href; }
-function dishUrl(id) { const u = new URL(location.href); u.hash = "item-" + id; u.searchParams.delete("pot"); return u.href; }
+function menuUrl() { const u = new URL(location.href); if (u.searchParams.has("lang") || addressPending & 1 || openDlg()?.__langClose) u.searchParams.set("lang", state.lang); syncAvoid(u); u.hash = ""; u.searchParams.delete("pot"); return u.href; }
+function dishUrl(id) { const u = new URL(menuUrl()); u.hash = "item-" + id; return u.href; }
 function potUrl(p = state.pot) { const u = new URL(menuUrl()); u.searchParams.set("pot", encodePot(p)); return readable(u).href; }
 function shareLink(url) {
   const copy = () => { try { return navigator.clipboard ? Promise.resolve(navigator.clipboard.writeText(url)).then(() => "copied", () => "failed") : Promise.resolve("failed"); } catch (e) { return Promise.resolve("failed"); } };
@@ -3159,7 +3225,7 @@ function keepReading() {
   if ((!window.tabuReady && !readingReturn) || reading) return;
   try {
     const y = scrollY, x = readingRows(), saved = history.state;
-    if (!saved || saved.menuY !== y || String(saved.menuX) !== String(x)) { history.replaceState({ ...saved, menuY: y, menuX: x }, ""); keepReading.log = (keepReading.log || []).concat(performance.now()).slice(-40); }
+    if ((!saved || saved.menuY !== y || String(saved.menuX) !== String(x)) && writeHistory("replaceState", { ...saved, menuY: y, menuX: x })) keepReading.log = (keepReading.log || []).concat(performance.now()).slice(-40);
   } catch (e) {}
 }
 addEventListener("scroll", e => { if (e.target !== document && !e.target.classList?.contains("protein-row")) return; clearTimeout(keepReading.t); const log = keepReading.log || []; keepReading.t = setTimeout(keepReading, log.length < 40 ? 200 : Math.min(30000, Math.max(200, log[0] + 30000 - performance.now()))); }, { capture: true, passive: true });
