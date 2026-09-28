@@ -590,46 +590,44 @@ html[lang="ur"] .hh-tag { line-height:2; }
 .specials.tabu-shabu-promos .promo-card.hh:not(.hh-now) .hh-offer { font-size:1.125rem; }
 @media (forced-colors: active) { .tabu-shabu-promos .promo-card.hh::before { background:Canvas; border:1px solid CanvasText; -webkit-mask:none; mask:none; } .hh-tag i { background:CanvasText; } }
 }
-.how2 { display:grid; grid-template-columns:minmax(0, 1fr) 96px; column-gap:12px; align-items:start; margin:12px 0 0; padding:14px 16px; border-radius:14px; background:#252525; color:#FFFFFF; font-family:var(--text); }
-.how2-head { grid-column:1; min-width:0; overflow-wrap:break-word; }
-.how2-kicker { margin:0; color:var(--red); font-family:var(--display); font-size:clamp(1.1875rem, 4.8vw, 1.25rem); line-height:1.15; font-weight:700; text-wrap:balance; }
-.how2 h2 { display:inline-block; max-width:100%; box-sizing:border-box; margin:8px 0 12px; padding:0; border:0; color:#FFFFFF; font-family:var(--display); font-size:clamp(1.125rem, 5.2vw, 1.375rem); line-height:1.15; font-weight:600; letter-spacing:.06em; text-wrap:balance; }
-.how2-steps { grid-column:1 / -1; min-width:0; overflow-wrap:break-word; display:grid; gap:8px; margin:0; padding:0; list-style:none; counter-reset:how2; }
-.how2-steps li { position:relative; display:grid; grid-template-columns:24px minmax(0, 1fr); column-gap:10px; align-items:start; counter-increment:how2; font-size:.875rem; line-height:1.35; }
-.how2-steps li::before { content:counter(how2); box-sizing:border-box; display:grid; place-items:center; width:24px; height:24px; border:1.5px solid var(--red); border-radius:50%; font-family:var(--display); font-size:.875rem; font-weight:700; line-height:1; }
-.how2-steps li:not(:last-child)::after { content:""; position:absolute; inset-inline-start:11px; top:28px; bottom:-8px; border-inline-start:2px dotted #FFFFFF73; }
-.how2-steps li span { text-wrap:pretty; }
-.how2-art { grid-column:2; grid-row:1; align-self:center; display:flex; align-items:center; gap:6px; }
+.how2 { display:flex; flex-wrap:wrap; align-items:center; gap:12px 16px; margin:12px 0 0; padding:14px 16px 16px; border-radius:14px; background:#252525; color:#FFFFFF; font-family:var(--text); }
+.how2-head { flex:1 1 100%; min-width:0; overflow-wrap:break-word; }
+.how2-kicker { margin:4px 0 0; color:var(--red); font-family:var(--display); font-size:clamp(1.1875rem, 4.8vw, 1.25rem); line-height:1.15; font-weight:700; text-wrap:balance; }
+.how2 h2 { display:inline-block; max-width:100%; box-sizing:border-box; margin:0; padding:0; border:0; color:#FFFFFF; font-family:var(--display); font-size:clamp(1.125rem, 5.2vw, 1.375rem); line-height:1.15; font-weight:600; letter-spacing:.06em; text-wrap:balance; }
+.how2-steps { --how2-lh:1.35; flex:999 1 0; min-width:min(11em, 100%); overflow-wrap:break-word; display:grid; gap:10px; margin:0; padding:0; list-style:none; counter-reset:how2; }
+.how2-steps li { --dot:calc(24em / 14); position:relative; display:grid; grid-template-columns:var(--dot) minmax(0, 1fr); column-gap:10px; align-items:start; counter-increment:how2; font-size:.875rem; line-height:var(--how2-lh); }
+.how2-steps li::before { content:counter(how2); box-sizing:border-box; display:grid; place-items:center; width:var(--dot); height:var(--dot); margin-top:max(0px, calc(var(--how2-lh) * .5em - var(--dot) / 2)); border:1.5px solid var(--red); border-radius:50%; font-family:var(--display); font-size:.875rem; font-weight:700; line-height:1; }
+.how2-steps li:not(:last-child)::after { content:""; position:absolute; inset-inline-start:calc(var(--dot) / 2 - 1px); top:calc(var(--dot) + 4px + max(0px, calc(var(--how2-lh) * .5em - var(--dot) / 2))); bottom:-6px; border-inline-start:2px dotted #FFFFFF73; }
+.how2-steps li span { padding-top:max(0px, calc(var(--dot) / 2 - var(--how2-lh) * .5em)); text-wrap:pretty; }
+.how2-art { flex:1 1 72px; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; }
 .how2-art picture, .how2-art img { display:block; width:100%; height:auto; flex:none; }
-.how2-art picture { width:56px; }
-.how2-art picture + picture { width:34px; }
-html:is([lang="fa"], [lang="ar"], [lang="ur"]) .how2-steps li { line-height:1.8; }
+.how2-art picture { width:72px; }
+html:is([lang="fa"], [lang="ar"], [lang="ur"]) .how2-steps { --how2-lh:1.8; }
 html:is([lang="fa"], [lang="ar"], [lang="hi"]) .how2-kicker { line-height:1.5; }
 html[lang="ur"] .how2-kicker { line-height:1.9; }
-html[lang="ur"] .how2 h2 { line-height:1.7; }
+html[lang="ur"] .how2 .how2-head > h2 { line-height:1.7; }
 html[lang^="zh"] .how2 h2 { word-break:keep-all; }
-@media (max-width: 359px) { .how2 { grid-template-columns:minmax(0, 1fr) 64px; } .how2-art { gap:4px; } .how2-art picture { width:36px; } .how2-art picture + picture { width:24px; } }
+@media (max-width: 359px) { .how2-art { flex-basis:56px; gap:6px; } .how2-art picture { width:56px; } }
 .how2-toggle { display:none; }
 @media screen {
   .how2 { margin-top:8px; }
   .how2 h2 { display:block; }
   .how2-title { display:none; }
-  .how2-toggle { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; min-height:44px; padding:0; border:0; border-radius:6px; background:none; color:inherit; font:inherit; letter-spacing:inherit; text-align:start; text-decoration:none; cursor:pointer; }
+  .how2-toggle { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; min-height:44px; padding:0 16px; border:0; border-radius:14px; background:none; color:inherit; font:inherit; letter-spacing:inherit; text-align:start; text-decoration:none; cursor:pointer; }
   .how2-toggle > span { min-width:0; overflow-wrap:break-word; }
   .how2-toggle > svg { width:18px; height:18px; flex:none; color:currentColor; transform:rotate(90deg); transition:transform .2s var(--ease); }
   .how2.is-open .how2-toggle > svg { transform:rotate(-90deg); }
-  .how2-toggle:focus-visible { outline:3px solid #FFFFFF; outline-offset:2px; }
-  .how2:not(.is-open) { grid-template-columns:minmax(0, 1fr); padding:0; }
+  .how2-toggle:focus-visible { outline:3px solid #FFFFFF; outline-offset:-5px; }
+  .how2.is-open { padding-top:0; }
+  .how2.is-open .how2-head { flex-basis:calc(100% + 32px); margin-inline:-16px; }
+  .how2.is-open .how2-kicker { padding-inline:16px; }
+  .how2:not(.is-open) { padding:0; }
   .how2:not(.is-open) :is(.how2-kicker, .how2-steps, .how2-art) { display:none; }
-  .how2:not(.is-open) h2 { margin:0; }
-  .how2:not(.is-open) .how2-toggle { padding:0 16px; border-radius:14px; }
-  .how2:not(.is-open) .how2-toggle:focus-visible { outline-offset:-5px; }
-  html[lang="ur"] .how2:not(.is-open) .how2-toggle > span { line-height:1.7; }
-  html[lang="ur"] .how2:not(.is-open) .how2-toggle { padding-block:max(0px, calc(.25em - 5px)); }
+  html[lang="ur"] .how2 .how2-toggle { padding-block:max(0px, calc(.25em - 5px)); }
 }
 @media screen and (forced-colors: active) {
   .how2-toggle { color:ButtonText; outline:1px solid ButtonText; outline-offset:-1px; }
-  .how2-toggle:focus-visible { outline:3px solid Highlight; outline-offset:2px; }
+  .how2-toggle:focus-visible { outline:3px solid Highlight; outline-offset:-5px; }
 }
 .pot-hint { margin-top:6px; }
 .pot-steps { list-style:none; margin:16px 0 0; padding:0; display:grid; grid-template-columns:minmax(0, 1fr); gap:28px; container-type:inline-size; }
@@ -1237,8 +1235,9 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
   .how2 .how2-toggle { display:none; }
   .how2-title { display:inline; }
   .how2 h2 { display:inline-block; }
-  .how2:not(.is-open) { grid-template-columns:minmax(0, 1fr) 96px; padding:14px 16px; }
-  .how2:not(.is-open) h2 { margin:8px 0 12px; }
+  .how2.is-open, .how2:not(.is-open) { padding:14px 16px 16px; }
+  .how2.is-open .how2-head { flex-basis:100%; margin-inline:0; }
+  .how2.is-open .how2-kicker { padding-inline:0; }
   .how2:not(.is-open) .how2-kicker { display:block; }
   .how2:not(.is-open) .how2-steps { display:grid; }
   .how2:not(.is-open) .how2-art { display:flex; }
@@ -1614,7 +1613,7 @@ function syncHappy() {
 function how2HTML() {
   if (!has("ui.how2Title")) return "";
   const steps = [1, 2, 3, 4].map(n => `<li><span>${prose(t("ui.how2Step" + n))}</span></li>`).join("");
-  return `<aside class="how2${how2Open ? " is-open" : ""}" aria-labelledby="how2-title"><div class="how2-head"><p class="how2-kicker">${prose(t("ui.how2Kicker"))}</p><h2 id="how2-title"><span class="how2-title">${prose(t("ui.how2Title"))}</span><button type="button" class="how2-toggle" aria-expanded="${how2Open}" aria-controls="how2-steps"><span>${prose(t("ui.how2Title"))}</span>${ICON.chevron}</button></h2></div><ol class="how2-steps" id="how2-steps">${steps}</ol><div class="how2-art" aria-hidden="true"><picture><source type="image/webp" srcset="assets/how2-top.webp"><img src="assets/how2-top.png" alt="" width="376" height="424" decoding="async"></picture><picture><source type="image/webp" srcset="assets/how2-pot.webp"><img src="assets/how2-pot.png" alt="" width="271" height="235" decoding="async"></picture></div></aside>`;
+  return `<aside class="how2${how2Open ? " is-open" : ""}" aria-labelledby="how2-title"><div class="how2-head"><h2 id="how2-title"><span class="how2-title">${prose(t("ui.how2Title"))}</span><button type="button" class="how2-toggle" aria-expanded="${how2Open}" aria-controls="how2-steps"><span>${prose(t("ui.how2Title"))}</span>${ICON.chevron}</button></h2><p class="how2-kicker">${prose(t("ui.how2Kicker"))}</p></div><ol class="how2-steps" id="how2-steps">${steps}</ol><div class="how2-art" aria-hidden="true"><picture><source type="image/webp" srcset="assets/how2-top.webp"><img src="assets/how2-top.png" alt="" width="376" height="424" decoding="async"></picture><picture><source type="image/webp" srcset="assets/how2-pot.webp"><img src="assets/how2-pot.png" alt="" width="271" height="235" decoding="async"></picture></div></aside>`;
 }
 function ctaHTML() {
   return `<button class="cta" type="button" id="ctaFilter" aria-haspopup="dialog">${ICON.shield}<span><b id="ctaTitle"></b><small id="ctaSub" class="cta-detail"></small></span>${ICON.chevron}</button>`;
