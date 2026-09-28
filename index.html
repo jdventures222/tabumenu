@@ -717,8 +717,11 @@ html[dir="rtl"] .step-skip svg { transform:scaleX(-1); }
 .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) > .al b { font-weight:600; }
 .hide-flagged .pot-steps .items > .item.no-photo.flagged:has(> .item-body > .item-head.with-add), .pot-steps .items > .item.no-photo[hidden]:has(> .item-body > .item-head.with-add) { display:none; }
 .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) .item-head.with-add > :is(.price, .pick-add) { grid-row:1; }
+@media screen { .pot-steps .items > .item.no-photo:where(:not(.flagged:has(> .al))):has(> .item-body > .item-head.with-add) .item-head.with-add > :is(.price, .pick-add) { grid-row:1; } }
 /* Large text: the name on its own line, then the price and Add, then the rest. */
 @container (max-width: 17rem) { .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) { grid-template-columns:minmax(0, 1fr) auto; row-gap:6px; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) .item-head.with-add > h3 { grid-column:1 / -1; grid-row:1; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) > .item-body > .en-name { grid-column:1 / -1; grid-row:2; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) .item-head.with-add > .price, .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) .item-head.with-add > .price { grid-column:1; grid-row:3; justify-self:start; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) .item-head.with-add > .pick-add, .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) .item-head.with-add > .pick-add { grid-column:2; grid-row:3; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) > .al, .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) > .al { grid-column:1 / -1; grid-row:auto; } }
+/* Large text with nothing between the name and the price (no English name, no showing Contains line): no empty row. */
+@media screen { @container (max-width: 17rem) { .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):not(:has(> .item-body > :not(.item-head))):not(.flagged:has(> .al)) .item-head.with-add > :is(.price, .pick-add) { grid-row:2; } } }
 /* On screen, the Starters step and the plain sections after the pot (Extras, drinks, Desserts, To Go) list their dishes
    on one white card with a hairline between rows; each row's line sits 1px above it, so the card clips the first one
    whichever dish is showing first. */
@@ -756,13 +759,13 @@ html .menu.rows > .items > .item > .al { justify-self:start; text-align:start; }
 @container (width > 17rem) {
   .menu.rows > .items > .item { --lines:1; display:grid; grid-template-columns:[text] minmax(0, 1fr) [price] auto [act] auto; grid-template-rows:repeat(var(--lines), auto); }
   .menu.rows > .items > .item:not(.no-photo) { grid-template-columns:[thumb] auto [text] minmax(0, 1fr) [price] auto [act] auto; }
-  .menu.rows > .items > .item:has(> .al) { --lines:2; }
+  .menu.rows > .items > .item.flagged:has(> .al) { --lines:2; }
   .menu.rows > .items > .item:has(> .item-body > :nth-child(2 of :not(.table-control))) { --lines:2; }
-  .menu.rows > .items > .item:has(> .item-body > :nth-child(2 of :not(.table-control))):has(> .al) { --lines:3; }
+  .menu.rows > .items > .item.flagged:has(> .item-body > :nth-child(2 of :not(.table-control))):has(> .al) { --lines:3; }
   .menu.rows > .items > .item:has(> .item-body > :nth-child(3 of :not(.table-control))) { --lines:3; }
-  .menu.rows > .items > .item:has(> .item-body > :nth-child(3 of :not(.table-control))):has(> .al) { --lines:4; }
+  .menu.rows > .items > .item.flagged:has(> .item-body > :nth-child(3 of :not(.table-control))):has(> .al) { --lines:4; }
   .menu.rows > .items > .item:has(> .item-body > :nth-child(4 of :not(.table-control))) { --lines:4; }
-  .menu.rows > .items > .item:has(> .item-body > :nth-child(4 of :not(.table-control))):has(> .al) { --lines:5; }
+  .menu.rows > .items > .item.flagged:has(> .item-body > :nth-child(4 of :not(.table-control))):has(> .al) { --lines:5; }
   .menu.rows > .items > .item > .item-body > *, .menu.rows > .items > .item > .item-body > .item-head > *, .menu.rows > .items > .item > .al { grid-column:text; }
   .menu.rows > .items > .item > .item-body > .variants { grid-column:text / -1; }
   .menu.rows > .items > .item > .thumb-btn { grid-column:thumb; grid-row:1 / -1; }
@@ -1276,6 +1279,18 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
 .promo-list .promo-card .promo-media[data-pool] > picture, .promo-list .promo-card .promo-media[data-pool] > img { position: absolute; inset: 0; transition: opacity .6s ease; }
 .promo-list .promo-card .promo-media[data-pool] > .in { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .promo-list .promo-card .promo-media[data-pool] > picture, .promo-list .promo-card .promo-media[data-pool] > img { transition: none; } }
+@media screen {
+  #main .item:not(.flagged) > .al,
+  #main .item:not(.flagged) > .item-body .al,
+  #main .side-list > li:not(.flagged) > .al,
+  #main .protein-pick:not(.flagged) ~ .al,
+  #main .vplus:not(:has(mark)),
+  #searchResults .search-result:not(.flagged) > .al,
+  #searchResults .search-result:not(.flagged) > a > .al,
+  #searchResults .vplus:not(:has(mark)),
+  .pot-bar .al:not(:has(mark)) { display:none; }
+  .pot-flow .choices > .item.choice:not(.flagged) > .pick { padding-bottom:10px; }
+}
 </style>
 </head>
 <body>
@@ -1834,7 +1849,8 @@ function pickFromEvent(e) {
 /* potAsk: the pot a pending Clear / Remove question is about, as its index, the number of pots and its contents (false
    when none); the question goes when any of them changes or the bar is drawn closed. */
 let potOpen = false, potAsk = false, potSize = "reg", potList = false, potSides = null, potAbout = false;
-/* Name only the live flow: print keeps its plain dish markup, and search copies no flow ids. */
+/* Name only the live flow: print keeps its plain dish markup, and search copies no flow ids.
+   Hidden aria-describedby targets are still announced, so references must follow the screen. */
 function nameFlowControls() {
   const shared = document.querySelector("#main .pot-sauces"); if (shared) shared.id = "flow-shared-allergens";
   document.querySelectorAll("#main .table-control").forEach(el => { const al = el.closest(".item")?.querySelector(":scope > .al"); if (al) al.id = "flow-table-" + el.dataset.tableId + "-al"; });
@@ -1852,9 +1868,14 @@ function nameFlowControls() {
       b.setAttribute("aria-labelledby", refs.join(" "));
     }
     const lines = [...card.querySelectorAll(":scope > .al"), ...b.querySelectorAll(".vplus, .derived")];
-    const refs = lines.map((el, i) => { el.id = key + "-al-" + (el.closest("button") ? b.dataset.k + "-" : "") + i; return el.id; });
+    lines.forEach((el, i) => { el.id = key + "-al-" + (el.closest("button") ? b.dataset.k + "-" : "") + i; });
+    const refs = lines.filter(el => getComputedStyle(el).display !== "none").map(el => el.id);
     if (!side && card.closest(".pot-proteins") && shared) refs.push(shared.id);
     if (refs.length) b.setAttribute("aria-describedby", refs.join(" ")); else b.removeAttribute("aria-describedby");
+  });
+  document.querySelectorAll("#main .table-btn, #main .protein-pick").forEach(b => {
+    const al = $(b.classList.contains("table-btn") ? "flow-table-" + b.closest(".table-control").dataset.tableId + "-al" : "flow-cut-" + b.dataset.cut + "-al");
+    if (al && getComputedStyle(al).display !== "none") b.setAttribute("aria-describedby", al.id); else b.removeAttribute("aria-describedby");
   });
 }
 /* A radio group (a step's choices, the size) is one tab stop, on its chosen radio or else its first one shown, and the
