@@ -737,6 +737,8 @@ html[dir="rtl"] .step-skip svg { transform:scaleX(-1); }
 /* The name fills the first line beside the photo (48 px and its 12 px margin), so everything after the name starts a
    line of its own. */
 .menu.rows > .items > .item > .item-body > .item-head > h3 { order:1; flex:1 1 100%; min-width:0; overflow-wrap:break-word; }
+/* Names at the Starters step's size (.pot-steps .item-head.with-add > h3); line heights stay per language. */
+.menu.rows > .items > .item > .item-body > .item-head > h3 { font-size:1rem; }
 .menu.rows > .items > .item:not(.no-photo) > .item-body > .item-head > h3 { flex-basis:calc(100% - 60px); }
 .menu.rows > .items > .item > .item-body > :not(.item-head, .table-control), .menu.rows > .items > .item > .al { order:2; flex:1 1 100%; min-width:0; }
 .menu.rows > .items > .item > .item-body > .item-head > .price { order:3; margin:6px 0 0; }
