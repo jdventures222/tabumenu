@@ -609,6 +609,28 @@ html[lang="ur"] .how2-kicker { line-height:1.9; }
 html[lang="ur"] .how2 h2 { line-height:1.7; }
 html[lang^="zh"] .how2 h2 { word-break:keep-all; }
 @media (max-width: 359px) { .how2 { grid-template-columns:minmax(0, 1fr) 64px; } .how2-art { gap:4px; } .how2-art picture { width:36px; } .how2-art picture + picture { width:24px; } }
+.how2-toggle { display:none; }
+@media screen {
+  .how2 { margin-top:8px; }
+  .how2 h2 { display:block; }
+  .how2-title { display:none; }
+  .how2-toggle { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; min-height:44px; padding:0; border:0; border-radius:6px; background:none; color:inherit; font:inherit; letter-spacing:inherit; text-align:start; text-decoration:none; cursor:pointer; }
+  .how2-toggle > span { min-width:0; overflow-wrap:break-word; }
+  .how2-toggle > svg { width:18px; height:18px; flex:none; color:currentColor; transform:rotate(90deg); transition:transform .2s var(--ease); }
+  .how2.is-open .how2-toggle > svg { transform:rotate(-90deg); }
+  .how2-toggle:focus-visible { outline:3px solid #FFFFFF; outline-offset:2px; }
+  .how2:not(.is-open) { grid-template-columns:minmax(0, 1fr); padding:0; }
+  .how2:not(.is-open) :is(.how2-kicker, .how2-steps, .how2-art) { display:none; }
+  .how2:not(.is-open) h2 { margin:0; }
+  .how2:not(.is-open) .how2-toggle { padding:0 16px; border-radius:14px; }
+  .how2:not(.is-open) .how2-toggle:focus-visible { outline-offset:-5px; }
+  html[lang="ur"] .how2:not(.is-open) .how2-toggle > span { line-height:1.7; }
+  html[lang="ur"] .how2:not(.is-open) .how2-toggle { padding-block:max(0px, calc(.25em - 5px)); }
+}
+@media screen and (forced-colors: active) {
+  .how2-toggle { color:ButtonText; outline:1px solid ButtonText; outline-offset:-1px; }
+  .how2-toggle:focus-visible { outline:3px solid Highlight; outline-offset:2px; }
+}
 .pot-hint { margin-top:6px; }
 .pot-steps { list-style:none; margin:16px 0 0; padding:0; display:grid; grid-template-columns:minmax(0, 1fr); gap:28px; container-type:inline-size; }
 .step { scroll-margin-top:calc(var(--bar-h) + 8px); }
@@ -849,7 +871,7 @@ html[dir="rtl"] .side-list > li.flagged { box-shadow:inset -3px 0 0 var(--red-de
 .pick-pending svg { width:18px; height:18px; }
 html[lang="ur"] :is(.protein-pick, .protein-picks-box h4, .side-size, .pot-ready, .pot-finish) { line-height:2; }
 .side-list .pick-size[aria-pressed="true"] > span:first-child::before { content:""; display:inline-block; width:8px; height:8px; margin-inline-end:8px; border-radius:50%; background:var(--ink); vertical-align:middle; }
-@media (prefers-reduced-motion: reduce) { .pot-about > summary svg, .pot-sides > summary svg { transition:none; } }
+@media (prefers-reduced-motion: reduce) { .pot-about > summary svg, .pot-sides > summary svg, .how2-toggle > svg { transition:none; } }
 .choices { list-style:none; margin:0; padding:0; display:grid; gap:10px; }
 .pot-flow .choices > .item.choice { display:block; margin:0; padding:0; border:1px solid var(--line); border-radius:12px; background:var(--surface); overflow:hidden; transition:border-color .15s var(--ease), background-color .15s var(--ease), box-shadow .15s var(--ease), transform .12s var(--ease); }
 .pot-flow .choices > .item.choice:not(.flagged):has(> .pick[aria-checked="true"]) { border-color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink); background:var(--surface); }
@@ -1212,6 +1234,14 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
   .menu-opening > .specials { grid-column:1; grid-row:1; min-width:0; margin:0; }
   .menu-opening > .cta { grid-column:1; grid-row:2; min-width:0; margin:0; }
   .menu-opening > .how2 { grid-column:2; grid-row:1 / span 2; min-width:0; margin:0; }
+  .how2 .how2-toggle { display:none; }
+  .how2-title { display:inline; }
+  .how2 h2 { display:inline-block; }
+  .how2:not(.is-open) { grid-template-columns:minmax(0, 1fr) 96px; padding:14px 16px; }
+  .how2:not(.is-open) h2 { margin:8px 0 12px; }
+  .how2:not(.is-open) .how2-kicker { display:block; }
+  .how2:not(.is-open) .how2-steps { display:grid; }
+  .how2:not(.is-open) .how2-art { display:flex; }
   .pot-flow > .pot-steps { grid-template-columns:repeat(2, minmax(0, 1fr)); column-gap:24px; }
   .pot-flow > .pot-steps > .step { grid-column:1 / -1; min-width:0; }
   .pot-flow > .pot-steps > #step-broth { grid-column:1; }
@@ -1584,7 +1614,7 @@ function syncHappy() {
 function how2HTML() {
   if (!has("ui.how2Title")) return "";
   const steps = [1, 2, 3, 4].map(n => `<li><span>${prose(t("ui.how2Step" + n))}</span></li>`).join("");
-  return `<aside class="how2" aria-labelledby="how2-title"><div class="how2-head"><p class="how2-kicker">${prose(t("ui.how2Kicker"))}</p><h2 id="how2-title">${prose(t("ui.how2Title"))}</h2></div><ol class="how2-steps">${steps}</ol><div class="how2-art" aria-hidden="true"><picture><source type="image/webp" srcset="assets/how2-top.webp"><img src="assets/how2-top.png" alt="" width="376" height="424" decoding="async"></picture><picture><source type="image/webp" srcset="assets/how2-pot.webp"><img src="assets/how2-pot.png" alt="" width="271" height="235" decoding="async"></picture></div></aside>`;
+  return `<aside class="how2${how2Open ? " is-open" : ""}" aria-labelledby="how2-title"><div class="how2-head"><p class="how2-kicker">${prose(t("ui.how2Kicker"))}</p><h2 id="how2-title"><span class="how2-title">${prose(t("ui.how2Title"))}</span><button type="button" class="how2-toggle" aria-expanded="${how2Open}" aria-controls="how2-steps"><span>${prose(t("ui.how2Title"))}</span>${ICON.chevron}</button></h2></div><ol class="how2-steps" id="how2-steps">${steps}</ol><div class="how2-art" aria-hidden="true"><picture><source type="image/webp" srcset="assets/how2-top.webp"><img src="assets/how2-top.png" alt="" width="376" height="424" decoding="async"></picture><picture><source type="image/webp" srcset="assets/how2-pot.webp"><img src="assets/how2-pot.png" alt="" width="271" height="235" decoding="async"></picture></div></aside>`;
 }
 function ctaHTML() {
   return `<button class="cta" type="button" id="ctaFilter" aria-haspopup="dialog">${ICON.shield}<span><b id="ctaTitle"></b><small id="ctaSub" class="cta-detail"></small></span>${ICON.chevron}</button>`;
@@ -1805,6 +1835,7 @@ function pickFromEvent(e) {
 /* potAsk: the pot a pending Clear / Remove question is about, as its index, the number of pots and its contents (false
    when none); the question goes when any of them changes or the bar is drawn closed. */
 let potOpen = false, potAsk = false, potSize = "reg", potList = false, potSides = null, potAbout = false;
+let how2Open = false;
 /* Name only the live flow: print keeps its plain dish markup, and search copies no flow ids.
    Hidden aria-describedby targets are still announced, so references must follow the screen. */
 function nameFlowControls() {
@@ -2308,6 +2339,13 @@ function renderMain() {
     renderMain.bound = true;
     addEventListener("resize", () => document.querySelectorAll("#main .swipe").forEach(w => w.__sync()), { passive: true });
     $("main").addEventListener("click", pickFromEvent);
+    $("main").addEventListener("click", e => {
+      const b = e.target.closest(".how2-toggle"); if (!b) return;
+      how2Open = !how2Open;
+      b.closest(".how2").classList.toggle("is-open", how2Open);
+      b.setAttribute("aria-expanded", String(how2Open));
+      scheduleSpy();
+    });
     $("main").addEventListener("keydown", roveKey);
     (function tick() { setTimeout(() => { if (!document.hidden) syncHappy(); tick(); }, 30000); })();
     document.addEventListener("visibilitychange", () => { if (!document.hidden) syncHappy(); });
