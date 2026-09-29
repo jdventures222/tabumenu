@@ -333,8 +333,8 @@ h2, h3, .item h3, .sheet-head h2 { text-transform:none; letter-spacing:0; }
 @media screen {
   #main section.menu { margin:36px 0 0; }
   #main section.menu > header { border-bottom:1px solid var(--line); padding-bottom:5px; }
-  #main .menu > header h2 { font-size:1.625rem; font-weight:700; }
-  #main .menu > header h2::after { content:""; display:block; width:36px; height:3px; margin-top:6px; background:var(--red); border-radius:2px; }
+  #main .menu > header h2 { width:fit-content; max-width:100%; font-size:1.625rem; font-weight:700; }
+  #main .menu > header h2::after { content:""; display:block; width:100%; height:3px; margin-top:6px; background:var(--red); border-radius:2px; }
   .drinks > .drink-title { margin:24px 0 0; font-size:1.125rem; font-weight:700; scroll-margin-top:calc(var(--bar-h) + 8px); overflow-wrap:anywhere; }
   .cta { min-height:44px; margin:8px 0 0; padding-block:8px; border-color:var(--control); }
   .cta > span { display:flex; flex-wrap:wrap; gap:0 8px; align-items:baseline; }
@@ -609,6 +609,7 @@ html[lang="ur"] .how2 .how2-head > h2 { line-height:1.7; }
 html[lang^="zh"] .how2 h2 { word-break:keep-all; }
 @media (max-width: 359px) { .how2-art { flex-basis:56px; gap:6px; } .how2-art picture { width:56px; } }
 .how2-toggle { display:none; }
+.how2-icons { display:none; }
 @media screen {
   .how2 { margin-top:8px; }
   .how2 h2 { display:block; }
@@ -623,9 +624,13 @@ html[lang^="zh"] .how2 h2 { word-break:keep-all; }
   .how2.is-open .how2-kicker { padding-inline:16px; }
   .how2:not(.is-open) { padding:0; }
   .how2:not(.is-open) :is(.how2-kicker, .how2-steps, .how2-art) { display:none; }
+  .how2:not(.is-open) .how2-icons { flex:1 1 0; min-width:0; height:26px; display:flex; flex-wrap:wrap; align-content:flex-start; column-gap:6px; overflow:hidden; margin-inline-start:-8px; }
+  .how2:not(.is-open) .how2-icons::before { content:""; flex:none; width:8px; height:26px; margin-inline-end:-6px; }
+  .how2-icons > i { flex:none; width:calc(var(--w) * 1px / 3); height:26px; margin-inline:auto; background:url(assets/how2-strip.webp) calc(var(--x) * -1px / 3) 0 / 229px 26px no-repeat; }
   html[lang="ur"] .how2 .how2-toggle { padding-block:max(0px, calc(.25em - 5px)); }
 }
 @media screen and (forced-colors: active) {
+  .how2:not(.is-open) .how2-icons { display:none; }
   .how2-toggle { color:ButtonText; outline:1px solid ButtonText; outline-offset:-1px; }
   .how2-toggle:focus-visible { outline:3px solid Highlight; outline-offset:-5px; }
 }
@@ -675,7 +680,14 @@ html[dir="rtl"] .step-skip svg { transform:scaleX(-1); }
 .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) .item-head.with-add > :is(.price, .pick-add) { grid-row:1; }
 @media screen { .pot-steps .items > .item.no-photo:where(:not(.flagged:has(> .al))):has(> .item-body > .item-head.with-add) .item-head.with-add > :is(.price, .pick-add) { grid-row:1; } }
 @container (max-width: 17rem) { .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) { grid-template-columns:minmax(0, 1fr) auto; row-gap:6px; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) .item-head.with-add > h3 { grid-column:1 / -1; grid-row:1; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) > .item-body > .en-name { grid-column:1 / -1; grid-row:2; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) .item-head.with-add > .price, .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) .item-head.with-add > .price { grid-column:1; grid-row:3; justify-self:start; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) .item-head.with-add > .pick-add, .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) .item-head.with-add > .pick-add { grid-column:2; grid-row:3; } .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add) > .al, .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):has(> .item-body > :not(.item-head)) > .al { grid-column:1 / -1; grid-row:auto; } }
-@media screen { @container (max-width: 17rem) { .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):not(:has(> .item-body > :not(.item-head))):not(.flagged:has(> .al)) .item-head.with-add > :is(.price, .pick-add) { grid-row:2; } } }
+@media screen { @container (max-width: 17rem) {
+  .pot-steps .items > .item.no-photo:has(> .item-body > .item-head.with-add):not(:has(> .item-body > :not(.item-head))):not(.flagged:has(> .al)) .item-head.with-add > :is(.price, .pick-add) { grid-row:2; }
+  .pot-steps .item-head.with-add > .price { margin-inline-start:0; }
+  .menu.rows .table-variants > li { align-items:center; }
+  .menu.rows .table-variants > li > span:first-child { flex-basis:100%; }
+  .menu.rows .table-variants > li > .price { margin-inline-start:0; }
+  .menu.rows .table-variants .table-control { flex-basis:auto; margin:0; margin-inline-start:auto; }
+} }
 @media screen {
 .menu.rows > .items, .starter-flow .pot-steps .items, #step-soup > .items { margin-top:12px; background:var(--surface); border:1px solid var(--line-soft); box-shadow:0 1px 2px #0000000a; border-radius:14px; overflow:hidden; container-type:inline-size; }
 .menu.rows > .items .price, .starter-flow .pot-steps .items .price, #step-soup > .items .price { font-weight:600; }
@@ -721,7 +733,7 @@ html .menu.rows > .items > .item > .al { justify-self:start; text-align:start; }
   .menu.rows > .items > .item:not(.no-photo):has(.table-count) { grid-template-rows:repeat(var(--lines), auto) auto; }
   .menu.rows > .items > .item:not(.no-photo):has(.table-count) > .item-body > .item-head > .price { grid-column:text; grid-row:auto; justify-self:start; margin:2px 0 0; }
 }
-@container (17rem < width <= 20rem) {
+@container (17rem < width <= 24rem) {
   .menu.rows > .items > .item:not(.no-photo) { grid-template-rows:repeat(var(--lines), auto) auto; }
   .menu.rows > .items > .item:not(.no-photo) > .item-body > .item-head > .price { grid-column:text; grid-row:auto; justify-self:start; margin:2px 0 0; }
 }
@@ -942,7 +954,6 @@ section.menu.pot-flow { --thumb:64px; }
 .pot-flow .protein-row .pick-one .pick-size { flex-direction:row; justify-content:center; align-items:center; min-height:48px; }
 .pot-flow .pot-proteins:not(.list) .protein-row { align-items:stretch; }
 .pot-flow .pot-proteins:not(.list) .protein-row > .item > .item-body { flex:1 0 auto; display:flex; flex-direction:column; }
-.pot-flow .pot-proteins:not(.list) .protein-row { align-items:start; }
 .pot-flow .pot-proteins:not(.list) .protein-row .pick-one { margin-top:auto; padding-top:12px; }
 .pot-flow .pot-proteins:not(.list) .protein-row .item-body > .variants.pickable { margin-top:4px; padding-top:0; }
 html[lang="ja"] .pot-flow .protein-row .item-head h3 { text-wrap:balance; }
@@ -1166,6 +1177,40 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
 }
 @media print { .crowd-measure { display:none; } }
 @media print { .pot-bar, .saved-pots, .pot-hint, .pot-peanut, .pick::before, .step-skip, .pick-add, .flow-end, .pot-cats, .pick-one, .seg-size:not([aria-checked="true"]) { display:none !important; } .pot-size { display:block; padding:0; background:none; } .seg-size { min-height:0; padding:0; box-shadow:none !important; text-align:start; font-weight:700; } .pick { grid-template-columns:minmax(0, 1fr) auto; } .choices.tiles, .choices.tiles .pick { grid-template-columns:minmax(0, 1fr); } .choices.tiles .pick .price { grid-column:1; } }
+@media screen {
+  .choices.tiles:not(.free) .pick { grid-template-rows:1fr auto; align-content:stretch; }
+  .choices.tiles:not(.free) .pick .price { grid-row:2; align-self:end; }
+  .choices.tiles { --tile-name-lh:1.3; }
+  html:is([lang="ar"], [lang="fa"]) .choices.tiles { --tile-name-lh:1.8; }
+  html[lang="ur"] .choices.tiles { --tile-name-lh:2.6; }
+  html .pot-flow .choices.tiles .pick-name { line-height:var(--tile-name-lh); }
+  .choices.tiles .pick::before { grid-column:1; grid-row:1; margin-block-start:calc(.9375rem * var(--tile-name-lh) / 2 - 10px); }
+  .choices.tiles .pick-name { grid-column:2; grid-row:1; }
+  .choices.tiles .pick-title .published-tags { flex-basis:100%; }
+  .order-pot-head { align-items:center; }
+  .pot-rename svg { display:block; }
+  .table-btn { font-weight:400; }
+  .item-head .pick-add { font-weight:400; }
+  #sectionSheet .section-list a:last-child { border-bottom:0; }
+  html[dir="rtl"] #main .en-name, html[dir="rtl"] #footer .locs address[dir="ltr"] { text-align:right; }
+  html[lang="ur"] .how2 .how2-head > h2 { font-size:1rem; line-height:2.4; }
+  html[lang="ur"] .how2 :is(.how2-toggle > span, .how2-title) { position:relative; top:.2em; }
+  html:is([lang="fa"], [lang="ar"], [lang="hi"]) .pot-steps .item-head.with-add > h3 { line-height:1.6; }
+  html[lang="ur"] .pot-steps .item-head.with-add > h3 { line-height:2.6; }
+  html[lang="ur"] .sheet-head > .x { margin-block-start:clamp(0px, calc(1.95rem - 16px), calc(32vh - 66px)); }
+  html[lang="ur"] .search-result a { align-items:baseline; }
+  html[lang="ur"] .search-result a > .price { grid-row:1; }
+  .order-total > span { flex-basis:0; min-width:auto; }
+  :is(.choices.tiles .pick-title > span:first-child, .menu.rows .item-head > h3, .pot-steps .item-head.with-add > h3, #orderSheet .order-tools .btn.quiet) { text-wrap:balance; }
+  html[lang="ja"] :is(.choices.tiles .pick-title > span:first-child, .menu.rows .item-head > h3, .pot-steps .item-head.with-add > h3, #orderSheet .order-tools .btn.quiet) { word-break:auto-phrase; }
+  #orderSheet .order-tools .btn.quiet { align-items:flex-start; }
+  #main .item .desc { text-wrap:pretty; }
+  #searchQuery::-webkit-search-cancel-button { -webkit-appearance:none; appearance:none; }
+}
+@media screen and (max-width: 359px) {
+  :is(#step-starters, #step-soup) .step-top { grid-template-columns:minmax(0, 1fr); row-gap:6px; }
+  :is(#step-starters, #step-soup) .step-skip { grid-column:1; grid-row:3; justify-self:start; max-width:100%; overflow-wrap:anywhere; }
+}
   .link-note { margin: 12px auto 0; }
   .link-note[hidden] { display: none; }
   .link-note span { display: block; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 0.875rem; line-height: 1.4; }
@@ -1610,10 +1655,12 @@ function syncHappy() {
   el.closest(".hh")?.classList.toggle("hh-now", !!w && w.k === "now");
   el.innerHTML = w ? (w.k === "now" ? '<i aria-hidden="true"></i>' : "") + prose(w.text) : "";
 }
+/* [x, width] of each icon in assets/how2-strip.webp (3x), from assets/how2-strip.json: pot first, then the poster's order. */
+const HOW2_ICONS = [[8,91],[107,70],[185,72],[265,76],[349,95],[452,63],[523,51],[582,31],[621,58]];
 function how2HTML() {
   if (!has("ui.how2Title")) return "";
   const steps = [1, 2, 3, 4].map(n => `<li><span>${prose(t("ui.how2Step" + n))}</span></li>`).join("");
-  return `<aside class="how2${how2Open ? " is-open" : ""}" aria-labelledby="how2-title"><div class="how2-head"><h2 id="how2-title"><span class="how2-title">${prose(t("ui.how2Title"))}</span><button type="button" class="how2-toggle" aria-expanded="${how2Open}" aria-controls="how2-steps"><span>${prose(t("ui.how2Title"))}</span>${ICON.chevron}</button></h2><p class="how2-kicker">${prose(t("ui.how2Kicker"))}</p></div><ol class="how2-steps" id="how2-steps">${steps}</ol><div class="how2-art" aria-hidden="true"><picture><source type="image/webp" srcset="assets/how2-top.webp"><img src="assets/how2-top.png" alt="" width="376" height="424" decoding="async"></picture><picture><source type="image/webp" srcset="assets/how2-pot.webp"><img src="assets/how2-pot.png" alt="" width="271" height="235" decoding="async"></picture></div></aside>`;
+  return `<aside class="how2${how2Open ? " is-open" : ""}" aria-labelledby="how2-title"><div class="how2-head"><h2 id="how2-title"><span class="how2-title">${prose(t("ui.how2Title"))}</span><button type="button" class="how2-toggle" aria-expanded="${how2Open}" aria-controls="how2-steps"><span>${prose(t("ui.how2Title"))}</span><span class="how2-icons" aria-hidden="true">${HOW2_ICONS.map(([x, w]) => `<i style="--x:${x};--w:${w}"></i>`).join("")}</span>${ICON.chevron}</button></h2><p class="how2-kicker">${prose(t("ui.how2Kicker"))}</p></div><ol class="how2-steps" id="how2-steps">${steps}</ol><div class="how2-art" aria-hidden="true"><picture><source type="image/webp" srcset="assets/how2-top.webp"><img src="assets/how2-top.png" alt="" width="376" height="424" decoding="async"></picture><picture><source type="image/webp" srcset="assets/how2-pot.webp"><img src="assets/how2-pot.png" alt="" width="271" height="235" decoding="async"></picture></div></aside>`;
 }
 function ctaHTML() {
   return `<button class="cta" type="button" id="ctaFilter" aria-haspopup="dialog">${ICON.shield}<span><b id="ctaTitle"></b><small id="ctaSub" class="cta-detail"></small></span>${ICON.chevron}</button>`;
@@ -3195,7 +3242,7 @@ const linkedDish = /^#item-[\w-]+$/.test(location.hash) ? location.hash.slice(1)
 const revealInRow = el => { if (el.closest(".protein-row")) el.scrollIntoView({ block: "nearest", inline: "start", behavior: "instant" }); };
 function goToItem(id) {
   const target = $(id); if (!target || !target.getClientRects().length) return false;
-  target.setAttribute("tabindex", "-1"); target.focus({ preventScroll: true }); revealInRow(target);
+  target.setAttribute("tabindex", "-1"); target.classList.add("pointer-focus"); target.focus({ preventScroll: true }); revealInRow(target);
   window.scrollTo({ top: Math.max(0, scrollY + target.getBoundingClientRect().top - menuTop() - 8), behavior: "instant" });
   return true;
 }
