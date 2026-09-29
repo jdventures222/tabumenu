@@ -325,6 +325,12 @@
 .brand h1 { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 .brand img { width:80px; height:auto; border-radius:0; }
 @media screen { .brand { position:relative; min-height:100px; box-sizing:border-box; justify-content:center; padding:8px 16px; } .brand img { filter:drop-shadow(0 1px 4px #0009); } .brand p { text-shadow:0 1px 3px #000c; } }
+@media screen {
+  .doodle::before { content:""; position:absolute; inset:-30px; background:url(assets/hero-blur.jpg) 50% 82% / cover no-repeat; filter:blur(16px) saturate(1.15); }
+  .doodle picture { position:relative; width:min(100%, 72%); margin-inline:auto; }
+  .doodle img { -webkit-mask:linear-gradient(90deg, #0000, #000 16%, #000 84%, #0000); mask:linear-gradient(90deg, #0000, #000 16%, #000 84%, #0000); }
+  @media (min-width: 64rem) { .doodle picture { width:40rem; } }
+}
 .brand h1 { font-size:1.5rem; line-height:1.12; font-weight:700; text-transform:none; letter-spacing:-.7px; }
 h2, h3, .item h3, .sheet-head h2 { text-transform:none; letter-spacing:0; }
 .item h3 { font-size:1.25rem; line-height:1.2; }
@@ -589,6 +595,18 @@ html[lang="ur"] .hh-tag { line-height:2; }
 .specials.tabu-shabu-promos .promo-card.hh:not(.hh-now) { --hh-p:10px; --hh-m:88px; }
 .specials.tabu-shabu-promos .promo-card.hh:not(.hh-now) .hh-offer { font-size:1.125rem; }
 @media (forced-colors: active) { .tabu-shabu-promos .promo-card.hh::before { background:Canvas; border:1px solid CanvasText; -webkit-mask:none; mask:none; } .hh-tag i { background:CanvasText; } }
+.specials.tabu-shabu-promos .promo-card.hh { filter:drop-shadow(0 8px 12px #7A0F1C38) drop-shadow(0 1px 1px #5A0D1633); }
+.tabu-shabu-promos .promo-card.hh::before { background:radial-gradient(110% 150% at var(--hh-glow) 0%, #DA3A46, #DA3A4600 62%), linear-gradient(165deg, #C3283A, #A31D2D 70%, #93192A); box-shadow:inset 0 1px 0 #FFFFFF38; }
+.specials.tabu-shabu-promos .promo-card.hh .promo-media { box-shadow:0 0 0 1px #FFFFFF38, 0 8px 14px -8px #3A050C99; }
+.tabu-shabu-promos .hh .hh-offer .hh-fig { font-size:1.36em; line-height:.9; font-weight:900; letter-spacing:-.025em; }
+.tabu-shabu-promos .promo-card.hh > svg { inline-size:28px; block-size:28px; padding:6px; box-sizing:border-box; border-radius:50%; background:#FFFFFF24; color:#FFFFFF; inset-inline-end:calc(var(--hh-p) - 2px); bottom:calc(var(--hh-p) - 2px); }
+.tabu-shabu-promos a.promo-card.hh .promo-copy > :last-child { padding-inline-end:34px; }
+.build-pot.show-order { gap:10px; font-size:1.125rem; letter-spacing:-.005em; background:linear-gradient(180deg, #DE3131, #C92836); box-shadow:inset 0 1px 0 #FFFFFF40, inset 0 -2px 0 #00000021, 0 12px 20px -14px #9E1B2ACC, 0 2px 4px -2px #5A0D1647; text-shadow:0 1px 1px #0000002E; transition:transform .12s var(--ease), box-shadow .12s var(--ease); }
+.build-pot.show-order::before { content:""; flex:none; width:28px; height:24px; background:url(assets/how2-strip.webp) -2.462px 0 / 211.385px 24px no-repeat; }
+@media (hover: hover) { .build-pot.show-order:hover { transform:translateY(-1px); box-shadow:inset 0 1px 0 #FFFFFF40, inset 0 -2px 0 #00000021, 0 14px 22px -14px #9E1B2AE6, 0 2px 4px -2px #5A0D1647; } }
+.build-pot.show-order:active { background:linear-gradient(180deg, #C92836, #B52030); transform:translateY(1px); box-shadow:inset 0 1px 0 #FFFFFF26, 0 6px 12px -10px #9E1B2ACC; }
+@media (prefers-reduced-motion: reduce) { .build-pot.show-order { transition:none; } }
+@media (forced-colors: active) { .build-pot.show-order::before { display:none; } }
 }
 .how2 { display:flex; flex-wrap:wrap; align-items:center; gap:12px 16px; margin:12px 0 0; padding:14px 16px 16px; border-radius:14px; background:#252525; color:#FFFFFF; font-family:var(--text); }
 .how2-head { flex:1 1 100%; min-width:0; overflow-wrap:break-word; }
@@ -1628,7 +1646,7 @@ function specialsHTML(screen) {
   const first = pool.find(id => PROMO[id]);
   const media = first ? promoPhotoHTML(first, pool) : promoMarkHTML();
   const when = `<p class="when">${t(sp.textKey).split(" · ").map(prose).join("<br>")}</p>`, terms = sp.termsKey ? `<p class="terms">${prose(t(sp.termsKey))}</p>` : "";
-  const copy = screen ? `<div class="promo-copy"><div class="hh-top"><h2 class="promo-title" id="tabu-shabu-happy-title">${prose(t(sp.titleKey))}</h2><span class="hh-tag" id="hhTag" hidden></span></div><p class="hh-offer">${prose(t(sp.offerKey))}</p>${when}${terms}</div>`
+  const copy = screen ? `<div class="promo-copy"><div class="hh-top"><h2 class="promo-title" id="tabu-shabu-happy-title">${prose(t(sp.titleKey))}</h2><span class="hh-tag" id="hhTag" hidden></span></div><p class="hh-offer">${prose(t(sp.offerKey)).replace(/(\p{Nd}+\s?[%٪]|\p{Nd}+折)/u, '<b class="hh-fig">$1</b>')}</p>${when}${terms}</div>`
     : `<div class="promo-copy"><h2 class="promo-title" id="tabu-shabu-happy-title">${prose(t(sp.titleKey))}</h2>${when}<p class="when">${prose(t(sp.offerKey))}</p>${terms}</div>`;
   if (!sec) return `<div class="specials promo-list tabu-shabu-promos"><aside class="special promo-card promo-notice${screen ? " hh" : ""}" aria-labelledby="tabu-shabu-happy-title">${media}${copy}</aside></div>`;
   return `<div class="specials promo-list tabu-shabu-promos"><a class="special promo-card${screen ? " hh" : ""}" href="#sec-${esc(sec.id)}" data-target="sec-${esc(sec.id)}">${media}${copy}${ICON.chevron}</a></div>`;
