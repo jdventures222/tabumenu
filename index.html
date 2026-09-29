@@ -315,7 +315,7 @@
   html[lang="ur"] .lb-cap span { white-space: normal; overflow: visible; text-align: center; }
   @media print { .bar, .cta, .skip, dialog { display: none !important; } html, body { background: #fff; } .thumb-btn { pointer-events: none; } }
 :root { --red:#E53333; --red-fill:#DE3131; --red-deep:#B52030; --red-text:#B52030; --ink:#313131; --body:#444444; --muted:#626262; --ground:#F7F7F7; --surface:#FFFFFF; --line:#D8D8D8; --line-soft:#E8E8E8; --control:#767676; --flag-bg:#FDECEC; --display:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif; --text:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif; }
-.doodle { position:relative; height:140px; background:#313131; overflow:hidden; }
+.doodle { position:absolute; inset:0; height:auto; background:#313131; overflow:hidden; }
 .doodle picture, .doodle img { display:block; width:100%; height:100%; }
 .doodle img { object-fit:cover; object-position:50% 82%; }
 .doodle::after { content:""; position:absolute; inset:0; background:linear-gradient(#0000004d,#00000073); }
@@ -324,7 +324,7 @@
 .brand p { color:#FFFFFF; }
 .brand h1 { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 .brand img { width:80px; height:auto; border-radius:0; }
-@media screen { .brand { position:relative; margin-top:-140px; min-height:140px; box-sizing:border-box; justify-content:center; padding:8px 16px; } .brand img { filter:drop-shadow(0 1px 4px #0009); } .brand p { text-shadow:0 1px 3px #000c; } }
+@media screen { .brand { position:relative; min-height:100px; box-sizing:border-box; justify-content:center; padding:8px 16px; } .brand img { filter:drop-shadow(0 1px 4px #0009); } .brand p { text-shadow:0 1px 3px #000c; } }
 .brand h1 { font-size:1.5rem; line-height:1.12; font-weight:700; text-transform:none; letter-spacing:-.7px; }
 h2, h3, .item h3, .sheet-head h2 { text-transform:none; letter-spacing:0; }
 .item h3 { font-size:1.25rem; line-height:1.2; }
@@ -1273,10 +1273,10 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
 }
 @media screen and (min-width: 64rem) {
   :root:not(.static-menu) { --maxw:960px; }
-  .menu-opening { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-template-rows:auto 1fr; gap:8px 24px; align-items:start; margin-top:14px; }
+  .menu-opening { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-template-rows:1fr auto; gap:8px 24px; margin-top:14px; }
   .menu-opening > .specials { grid-column:1; grid-row:1; min-width:0; margin:0; }
   .menu-opening > .cta { grid-column:1; grid-row:2; min-width:0; margin:0; }
-  .menu-opening > .how2 { grid-column:2; grid-row:1 / span 2; min-width:0; margin:0; }
+  .menu-opening > .how2 { grid-column:2; grid-row:1 / span 2; min-width:0; margin:0; align-content:center; }
   .how2 .how2-toggle { display:none; }
   .how2-title { display:inline; }
   .how2 h2 { display:inline-block; }
@@ -1307,7 +1307,7 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
 
 <a class="skip" href="#main" data-t="ui.skip">Skip to menu</a>
 <header class="masthead">
-  <div class="doodle" aria-hidden="true"><picture><source type="image/avif" srcset="assets/hero-web.avif"><source type="image/webp" srcset="assets/hero-web.webp"><img src="assets/hero-web.jpg" alt="" width="859" height="1440" fetchpriority="high"></picture></div>
+  <div class="doodle" aria-hidden="true"><picture><source media="(min-width: 64rem)" type="image/avif" srcset="assets/hero.avif"><source media="(min-width: 64rem)" type="image/webp" srcset="assets/hero.webp"><source type="image/avif" srcset="assets/hero-web.avif"><source type="image/webp" srcset="assets/hero-web.webp"><img src="assets/hero-web.jpg" alt="" width="859" height="1440" fetchpriority="high"></picture></div>
   <div class="wrap">
     <div class="brand">
       <picture><source type="image/avif" srcset="assets/logo.l216.avif 216w, assets/logo.l480.avif 480w" sizes="80px"><source type="image/webp" srcset="assets/logo.l216.webp 216w, assets/logo.l480.webp 480w" sizes="80px"><img src="assets/logo.png" alt="" width="648" height="398"></picture>
