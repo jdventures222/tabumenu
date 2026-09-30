@@ -326,9 +326,9 @@
 .brand img { width:80px; height:auto; border-radius:0; }
 @media screen { .brand { position:relative; min-height:100px; box-sizing:border-box; justify-content:center; padding:8px 16px; } .brand img { filter:drop-shadow(0 1px 4px #0009); } .brand p { text-shadow:0 1px 3px #000c; } }
 @media screen {
-  .doodle::before { content:""; position:absolute; inset:-30px; background:url(assets/hero-blur.jpg) 50% 82% / cover no-repeat; filter:blur(16px) saturate(1.15); }
+  .doodle::before { content:""; position:absolute; inset:-30px; background:linear-gradient(90deg, #313131, #31313100 42%, #31313100 58%, #313131), url(assets/hero-blur.jpg) 50% 82% / cover no-repeat; filter:blur(18px) saturate(.5) brightness(.8); }
   .doodle picture { position:relative; width:min(100%, 72%); margin-inline:auto; }
-  .doodle img { -webkit-mask:linear-gradient(90deg, #0000, #000 16%, #000 84%, #0000); mask:linear-gradient(90deg, #0000, #000 16%, #000 84%, #0000); }
+  .doodle img { -webkit-mask:linear-gradient(90deg, #0000, #000 22%, #000 78%, #0000); mask:linear-gradient(90deg, #0000, #000 22%, #000 78%, #0000); }
   @media (min-width: 64rem) { .doodle picture { width:40rem; } }
 }
 .brand h1 { font-size:1.5rem; line-height:1.12; font-weight:700; text-transform:none; letter-spacing:-.7px; }
@@ -1289,6 +1289,32 @@ body.has-pot > .toast { bottom:calc(var(--pot-h, 0px) + 12px); }
   .pot-bar .al:not(:has(mark)) { display:none; }
   .pot-flow .choices > .item.choice:not(.flagged) > .pick { padding-bottom:10px; }
 }
+@media screen {
+  :is(.chip, .pill, .btn, .menu-tool, .x span, .section-list a, .search-result a, .opt, .table-btn, .how2-toggle, .cat, .see-all, .loc-acts a, .protein-pick, .pot-tab, .pot-clear, .pot-share, .pot-add, .pot-next, .pot-show, .pot-yes, .meal-x, .step-skip) { transition:background-color .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease); }
+  #sectionBtn, #searchBtn { transition:opacity .18s ease, background-color .15s var(--ease), border-color .15s var(--ease), color .15s var(--ease); }
+  .chip:active, .menu-tool:active, .pill:active, .section-list a:active, .search-result:not(.flagged) a:active, .protein-pick:not(.flagged):active { background:var(--ground); }
+  .chip.tool:active, .x:active span, .btn.quiet:active, .clear-pots .btn:active, .loc-acts a:active, .item-head .pick-add:active, .table-btn:not([aria-disabled="true"]):active { background:var(--line-soft); border-color:var(--line-soft); }
+  .chip[aria-current]:active, .chip.tool.on:active, .pill[aria-pressed="true"]:active, .btn:active { background:#9A1B29; border-color:#9A1B29; }
+  .how2-toggle:active { background:#FFFFFF1F; }
+  .pot-tab[aria-checked="true"]:active { background:var(--line-soft); }
+  .table-control:has(.table-count) .table-btn:not([aria-disabled="true"]):active, .pick-choose[aria-pressed="true"]:active, .item-head .pick-add[aria-pressed="true"]:active { background:#4A4A4A; border-color:#4A4A4A; }
+  .item-head .pick-add, .table-btn { border-color:var(--line-soft); }
+  .table-control:has(.table-count) .table-btn { border-color:transparent; }
+  html:not(.roomy) .bar.scrolled { box-shadow:0 4px 14px -8px #00000029; }
+  .search-controls input { border-radius:10px; }
+  #searchQuery, .saved-new input, .saved-name { caret-color:var(--red-deep); }
+  .sheet-head::before { background:var(--control); }
+  @media (hover: hover) {
+    .btn:not(.quiet):not(:disabled):not(:active):hover { background:#C4283A; }
+    .chip:not([aria-current]):not(.on):hover, .cat:hover, .see-all:not([aria-pressed="true"]):hover, .pot-flow .choices > .item.choice:not(.flagged):not(:has(> .pick[aria-checked="true"])):hover, .variants.pickable .pick-size:not([aria-pressed="true"]):hover, .pick-one .pick-size:not([aria-pressed="true"]):hover { border-color:var(--control); }
+    .chip.tool:not(.on):hover, .x:hover span, .btn.quiet:not(:disabled):hover, .clear-pots .btn:not(:disabled):not(:active):hover, .loc-acts a:hover, .item-head .pick-add:not([aria-pressed="true"]):hover, .table-control:not(:has(.table-count)) .table-btn:hover { background:var(--line-soft); border-color:var(--line-soft); }
+    .menu-tool:hover, .cta:hover, .step-skip:hover, .section-list a:hover, .search-result:not(.flagged) a:hover, .opt:hover, .protein-pick:not(.flagged):hover, .pill:not([aria-pressed="true"]):hover { background:var(--ground); }
+    .how2-toggle:not(:active):hover, .pot-tab:not([aria-checked="true"]):not(:active):hover, .pot-clear:not(:active):hover, .pot-share:not(:active):hover, .pot-add:not(:active):hover, .meal-x:not(:active):hover { background:#FFFFFF14; }
+    .pot-next:not(:active):hover, .pot-show:not(.quiet):not(:active):hover, .pot-yes:not(:active):hover { background:#CF2B34; }
+    .seg-size:not([aria-checked="true"]):hover, .step-skip:hover { color:var(--ink); }
+  }
+}
+@media (forced-colors: active) { .pill[aria-pressed="true"]:active, .pick-choose[aria-pressed="true"]:active, .item-head .pick-add[aria-pressed="true"]:active { border-color:Highlight; } }
 @media screen and (min-width: 64rem) {
   :root:not(.static-menu) { --maxw:960px; }
   .menu-opening { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); grid-template-rows:1fr auto; gap:8px 24px; margin-top:14px; }
