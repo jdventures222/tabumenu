@@ -2158,7 +2158,7 @@ function syncPot() {
   $("potYes")?.addEventListener("click", () => {
     potAsk = false; calm(bar);
     const firstPick = () => $("step-" + (POT_GROUPS[0] || {}).id)?.querySelector(".pick");
-    if (state.pots.length > 1) { state.pots.splice(state.at, 1); usePot(state.at); const f = [$("potTab-" + state.at), $("potSum")].find(shown); if (f) f.focus({ preventScroll: true }); else if (firstPick()) landFocus(firstPick()); return; }
+    if (state.pots.length > 1) { state.pots.splice(state.at, 1); usePot(state.at); const f = [$("potTab-" + state.at), $("potSum")].find(shown); if (f) landFocus(f); else if (firstPick()) landFocus(firstPick()); return; }
     state.table = []; state.pot = emptyPot(); syncPot(); sayPot(""); if (firstPick()) landFocus(firstPick()); });
   bar.querySelector(".pot-next")?.addEventListener("click", e => { e.preventDefault(); focusMenuTarget(e.currentTarget.dataset.step, true); });
   bar.querySelector(".pot-sum").addEventListener("click", () => { potOpen = !potOpen; bar.classList.toggle("open", potOpen); bar.querySelector(".pot-sum").setAttribute("aria-expanded", potOpen); if (potOpen) bar.querySelector(".meal-row.flagged")?.scrollIntoView({ block: "nearest" }); else if (potAsk) { potAsk = false; syncPot(); $("potSum")?.focus({ preventScroll: true }); } });
@@ -2538,7 +2538,7 @@ function setLang(code, stay = false) {
   document.documentElement.classList.remove("lang-loading");
   const dlg = openDlg();
   const returnId = dlg?.__returnFocus?.id;
-  const focus = stay ? langTarget(document.activeElement) : null, back = stay && dlg ? langTarget(dlg.__returnFocus) : null, landed = document.activeElement?.classList.contains("pointer-focus");
+  const focus = stay ? langTarget(document.activeElement) : null, back = stay && dlg ? langTarget(dlg.__returnFocus) : null, landed = document.activeElement?.classList.contains("pointer-focus"), wasLanding = document.activeElement === landing;
   const position = stay ? [scrollY, readingRows()] : null;
   state.lang = code; store("tabu-shabu-lang", code);
   if (!dlg && modal.backs === 0) syncUrl();
@@ -2548,7 +2548,7 @@ function setLang(code, stay = false) {
   if (stay) { if (reading) restoreReading(); else placeReading(...position); } else scrollToMenuStart(token);
   if (dlg) dlg.__langClose = { token, stay };
   if (dlg?.id === "langSheet") { const focused = document.activeElement?.dataset.lang; dlg.innerHTML = langSheetHTML(); if (focused) dlg.querySelector(`[data-lang="${stay ? focused : code}"]`)?.focus({ preventScroll: true }); }
-  if (focus && focus() !== document.activeElement) { const el = focus(); if (landed) el?.classList.add("pointer-focus"); el?.focus({ preventScroll: true }); }
+  if (focus && focus() !== document.activeElement) { const el = focus(); if (landed) el?.classList.add("pointer-focus"); if (wasLanding) landing = el; el?.focus({ preventScroll: true }); }
   return Promise.resolve(true);
 }
 document.addEventListener("keydown", e => {
@@ -3155,7 +3155,7 @@ $("lbClose").addEventListener("click", () => closeDialog(LB.dlg));
 $("lbPrev").addEventListener("click", () => lbGoto(LB.index - 1, true));
 $("lbNext").addEventListener("click", () => lbGoto(LB.index + 1, true));
 document.addEventListener("keydown", e => {
-  document.querySelectorAll(".pointer-focus").forEach(b => b.classList.remove("pointer-focus"));
+  document.querySelectorAll(".pointer-focus").forEach(b => b === landing && b === document.activeElement || b.classList.remove("pointer-focus"));
   if (!LB.dlg.open || LB.dlg.classList.contains("closing")) return;
   lbChrome(true);
   if (e.key === "ArrowRight") { e.preventDefault(); lbGoto(LB.index + (isRTL() ? -1 : 1), true); }
@@ -3179,8 +3179,10 @@ const barSizes = "ResizeObserver" in window ? new ResizeObserver(() => requestAn
 function watchBarSizes() { barSizes?.disconnect(); ["bar", "sectionBtn", "searchBtn", "barLogo", "crowdMeasure"].forEach(id => $(id) && barSizes?.observe($(id))); }
 watchBarSizes();
 /* Where the page moves focus for the guest (landFocus) it draws no ring, after a tap or a key (James, 2026-09-30): a
-   choice's pick is marked so its card stays plain until the guest's next key. */
-const landFocus = el => { el.classList.add("pointer-focus"); el.focus({ preventScroll: true }); };
+   choice's pick or a bar control is marked so it stays plain while it keeps focus, whatever key is pressed on it. */
+let landing = null;
+const landFocus = el => { landing = el; el.classList.add("pointer-focus"); el.focus({ preventScroll: true }); };
+document.addEventListener("focusin", e => { if (e.target !== landing) landing = null; });
 /* Native focus scrolling can stop behind a fixed bar, especially at large text. */
 let focusKeyboard = false, focusInput = 0;
 addEventListener("keydown", e => { focusKeyboard = !e.altKey && !e.ctrlKey && !e.metaKey && /^(Tab|Home|End|Arrow)/.test(e.key); }, true);
@@ -3365,7 +3367,7 @@ document.addEventListener("click", e => {
     if (dlg) { dlg.__afterClose = go; closeDialog(dlg); } else go(); return;
   }
   const tab = e.target.closest("[data-pot-tab]"), add = e.target.closest("[data-add-pot]");
-  if (tab) { usePot(+tab.dataset.potTab); $("potTab-" + state.at)?.focus({ preventScroll: true }); return; }
+  if (tab) { const wasLanding = tab === landing && tab === document.activeElement; usePot(+tab.dataset.potTab); const t = $("potTab-" + state.at); if (t) wasLanding ? landFocus(t) : t.focus({ preventScroll: true }); return; }
   const ask = e.target.closest("[data-clear-ask]"), no = e.target.closest("[data-clear-no]"), yes = e.target.closest("[data-clear-yes]"), drop = e.target.closest("[data-clear-pot]");
   if (drop) {
     const i = +drop.dataset.clearPot, name = potName(i), dlg = $("orderSheet"), note = dlg.querySelector(":scope > .toast");
