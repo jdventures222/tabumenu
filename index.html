@@ -154,6 +154,7 @@
   .thumb-btn { display: block; width: calc(var(--thumb) * 4 / 3); height: var(--thumb); padding: 0; border: 0; background: none; border-radius: 12px; cursor: zoom-in; transition: transform .15s var(--ease); }
   .thumb-btn:active { transform: scale(.95); }
   .pointer-focus:focus-visible { outline: 0; }
+  :not(button)[tabindex="-1"]:focus-visible { outline: 0; }
   .thumb { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; background: var(--line-soft); display: block; box-shadow: inset 0 0 0 1px rgba(27, 25, 23, .06); }
   .thumb.cutout { object-fit: contain; background: transparent; border-radius: 0; box-shadow: none; }
   .item-head { display: grid; grid-template-columns: minmax(0, 1fr) max-content; gap: 10px; align-items: baseline; }
@@ -2537,7 +2538,7 @@ function setLang(code, stay = false) {
   document.documentElement.classList.remove("lang-loading");
   const dlg = openDlg();
   const returnId = dlg?.__returnFocus?.id;
-  const focus = stay ? langTarget(document.activeElement) : null, back = stay && dlg ? langTarget(dlg.__returnFocus) : null;
+  const focus = stay ? langTarget(document.activeElement) : null, back = stay && dlg ? langTarget(dlg.__returnFocus) : null, landed = document.activeElement?.classList.contains("pointer-focus");
   const position = stay ? [scrollY, readingRows()] : null;
   state.lang = code; store("tabu-shabu-lang", code);
   if (!dlg && modal.backs === 0) syncUrl();
@@ -2547,7 +2548,7 @@ function setLang(code, stay = false) {
   if (stay) { if (reading) restoreReading(); else placeReading(...position); } else scrollToMenuStart(token);
   if (dlg) dlg.__langClose = { token, stay };
   if (dlg?.id === "langSheet") { const focused = document.activeElement?.dataset.lang; dlg.innerHTML = langSheetHTML(); if (focused) dlg.querySelector(`[data-lang="${stay ? focused : code}"]`)?.focus({ preventScroll: true }); }
-  if (focus && focus() !== document.activeElement) focus()?.focus({ preventScroll: true });
+  if (focus && focus() !== document.activeElement) { const el = focus(); if (landed) el?.classList.add("pointer-focus"); el?.focus({ preventScroll: true }); }
   return Promise.resolve(true);
 }
 document.addEventListener("keydown", e => {
@@ -2829,12 +2830,12 @@ function searchNames(it, kind) {
 function sheetHead(id, title) {
   return `<div class="sheet-head"><h2 id="${id}">${esc(title)}</h2><button class="x" type="button" data-close aria-label="${esc(t("ui.close"))}"><span>${ICON.x}</span></button></div>`;
 }
-function focusMenuTarget(id, smooth, keyboard = keyedFocus) {
+function focusMenuTarget(id, smooth) {
   if (id === "brandTitle") { returnToTop(); return; }
   const target = $(id); if (!target) return;
   const control = target.matches(".choice") ? target.querySelector(".pick") : target;
   if (control === target) target.setAttribute("tabindex", "-1");
-  landFocus(control, keyboard); revealInRow(target);
+  landFocus(control); revealInRow(target);
   const top = document.documentElement.classList.contains("roomy") ? 0 : Math.max(menuTop(), parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--bar-h")) || 0);
   window.scrollTo({top: Math.max(0, scrollY + target.getBoundingClientRect().top - top - 8), behavior: smooth && !reduced ? "smooth" : "instant"});
 }
@@ -3177,15 +3178,9 @@ $("main").addEventListener("click", e => {
 const barSizes = "ResizeObserver" in window ? new ResizeObserver(() => requestAnimationFrame(syncBarHeight)) : null;
 function watchBarSizes() { barSizes?.disconnect(); ["bar", "sectionBtn", "searchBtn", "barLogo", "crowdMeasure"].forEach(id => $(id) && barSizes?.observe($(id))); }
 watchBarSizes();
-/* Where the page moves focus for the guest (landFocus) it rings only after a key press: a tap draws no ring round a
-   step, section, dish or choice card (James, 2026-09-30). */
-let keyedFocus = false;
-addEventListener("keydown", () => { keyedFocus = true; }, true);
-addEventListener("pointerdown", () => { keyedFocus = false; }, true);
-const landFocus = (el, keyboard = keyedFocus) => { el.classList.toggle("pointer-focus", !keyboard); el.focus({ preventScroll: true }); };
-/* A chip or the Happy Hour card is a plain #link, and the browser focuses its section itself once a landing has left
-   it focusable: the link marks it the same way first. */
-document.addEventListener("click", e => { const a = e.target.closest?.('a[href^="#"]'), to = a && document.getElementById(a.hash.slice(1)); to?.classList.toggle("pointer-focus", !keyedFocus); });
+/* Where the page moves focus for the guest (landFocus) it draws no ring, after a tap or a key (James, 2026-09-30): a
+   choice's pick is marked so its card stays plain until the guest's next key. */
+const landFocus = el => { el.classList.add("pointer-focus"); el.focus({ preventScroll: true }); };
 /* Native focus scrolling can stop behind a fixed bar, especially at large text. */
 let focusKeyboard = false, focusInput = 0;
 addEventListener("keydown", e => { focusKeyboard = !e.altKey && !e.ctrlKey && !e.metaKey && /^(Tab|Home|End|Arrow)/.test(e.key); }, true);
@@ -3347,7 +3342,7 @@ function toast(text) {
 }
 document.addEventListener("click", e => {
   const share = e.target.closest("#shareMenu, [data-share-dish], [data-share-pot]"), view = e.target.closest("[data-view-dish]");
-  if (view) { const id = "item-" + view.dataset.viewDish, keyboard = e.detail === 0; LB.dlg.__afterClose = () => { const target = $(id); if (!target) return; focusMenuTarget(id, false, keyboard); holdItem(id); clearTimeout(searchHighlightTimer); document.querySelector(".search-highlight")?.classList.remove("search-highlight"); target.classList.add("search-highlight"); searchHighlightTimer = setTimeout(() => target.classList.remove("search-highlight"), 1800); }; closeDialog(LB.dlg); return; }
+  if (view) { const id = "item-" + view.dataset.viewDish; LB.dlg.__afterClose = () => { const target = $(id); if (!target) return; focusMenuTarget(id, false); holdItem(id); clearTimeout(searchHighlightTimer); document.querySelector(".search-highlight")?.classList.remove("search-highlight"); target.classList.add("search-highlight"); searchHighlightTimer = setTimeout(() => target.classList.remove("search-highlight"), 1800); }; closeDialog(LB.dlg); return; }
   if (!share) return;
   const url = share.dataset.shareDish ? dishUrl(share.dataset.shareDish) : share.hasAttribute("data-share-pot") ? potUrl(state.pots[share.dataset.sharePot] || state.pot) : menuUrl(), done = shareLink(url);
   const dlg = openDlg();
