@@ -3183,6 +3183,9 @@ watchBarSizes();
 let landing = null;
 const landFocus = el => { landing = el; el.classList.add("pointer-focus"); el.focus({ preventScroll: true }); };
 document.addEventListener("focusin", e => { if (e.target !== landing) landing = null; });
+/* Focus that falls to the page (a tap on plain text) fires no focusin, so it ends the landing here; a window or app
+   switch leaves the landing as document.activeElement, and it stays. */
+document.addEventListener("focusout", e => { const el = e.target; if (el === landing) setTimeout(() => { if (landing === el && document.activeElement !== el) landing = null; }); });
 /* Native focus scrolling can stop behind a fixed bar, especially at large text. */
 let focusKeyboard = false, focusInput = 0;
 addEventListener("keydown", e => { focusKeyboard = !e.altKey && !e.ctrlKey && !e.metaKey && /^(Tab|Home|End|Arrow)/.test(e.key); }, true);
