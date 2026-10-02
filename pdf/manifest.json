@@ -2,24 +2,24 @@
  "layout": "diner-print-v1",
  "printer_sha256": "ff9ca4247e94070f05892bf397859b23ce19bf90ff6ad678dd5a5176fb18d8cb",
  "pages": {
-  "index.html": "6f71d76c16008cad2b736cccda2768a5649825d6691a93f87a09e213c4275221"
+  "index.html": "c3ed15469afc48f66e95809c13efafb4efb732134b417999826f9c64731ddfd3"
  },
  "print_pages": {
-  "TABU-SHABU-Menu-en.html": "d778e657ae128dcae0e53d7860b1672e640538748e51ab21e8e271a8597bcebe",
-  "TABU-SHABU-Menu-es.html": "9a0f22734590bba38f31927290506972b1737c2f43daad8acc6cabcf2eeee1b6",
-  "TABU-SHABU-Menu-vi.html": "0ca35f709cdcbdb3efc863530f47c9f595e7fa52e35efee46b3281ec5ff7d361",
-  "TABU-SHABU-Menu-ko.html": "05ff00795c2de066646477e8f11d4bfdeb8afee7329dd977de6cf41334ffbb8d",
-  "TABU-SHABU-Menu-zh.html": "864b7dd878ae828ffc2cffefe117ae11768a45665bc98bada03842e4a7d51a5a",
-  "TABU-SHABU-Menu-zh-Hant.html": "80aa313bed5c438e8149763b207c5938830d3223d7410a6d3e519b36c2021071",
-  "TABU-SHABU-Menu-tl.html": "40e077bdc749fc9f7d03c8a2da7d57fcefd1376f941f8f4b44a3ef8b5d2e3f4e",
-  "TABU-SHABU-Menu-fa.html": "6e2e0578d815785ffa5965ab85f0c2d05218005cf64820ba663ae25df8032204",
-  "TABU-SHABU-Menu-ar.html": "303c6426a09587efbb683dc057c7d22a2cb65771016b719030d9dc194b61177a",
-  "TABU-SHABU-Menu-ja.html": "b2a1f4952462c27d7b91650b2c7f531326cfd462009332f873abd9e28f32a86c",
-  "TABU-SHABU-Menu-ru.html": "edea77210f0db3f990a2c2caa91c25b5b2943e593d442147611f4e21a010c69b",
-  "TABU-SHABU-Menu-hi.html": "1f923365cb85a31a460fcc23c225067b93cd2676e656bb644939ef9c0246d0e9",
-  "TABU-SHABU-Menu-ur.html": "1393c50291aecef7f7f15b8e65fd7b429a7550302bb9289fde91f929aa0c50e5"
+  "TABU-SHABU-Menu-en.html": "035dbaa16968ccf8e634ae75c1224483e4d6802f8ab0b07228a4e468cd68df5c",
+  "TABU-SHABU-Menu-es.html": "df034d994777cc090cbdc8798de4929fe238eefb80876afabe25329c7921402c",
+  "TABU-SHABU-Menu-vi.html": "f137b5f282dd02843883b128f1044ca70a008ffa2956d943976afcee4a869053",
+  "TABU-SHABU-Menu-ko.html": "60b9ed2e26250756405230fb0789a24b7383fdea5126d7bb9f75cf2311cad8ab",
+  "TABU-SHABU-Menu-zh.html": "02907f2670553c0fec9d28f1292bf0360585d71df71b0204b93b6c8f00c7d776",
+  "TABU-SHABU-Menu-zh-Hant.html": "d02811cce8cdf0e22bc988d526ddc3d1092936867798ac9a270b27d94eb18736",
+  "TABU-SHABU-Menu-tl.html": "6e7205923e7d8039860050fe3865aa0558d6e009249aa6e50deb345c20957d89",
+  "TABU-SHABU-Menu-fa.html": "10b4b66d852bb9a3290b85519e7772bbab4cde719aeb2cfe90a73894656faff1",
+  "TABU-SHABU-Menu-ar.html": "5de8f82ca20635aa6a6667672d93240ee61b67ddeed8c67da915fd4ce92e8c82",
+  "TABU-SHABU-Menu-ja.html": "09c78b69c6b4503214fcb2916b86bf52557e85dca8953c4f1f3fad640e5ba39e",
+  "TABU-SHABU-Menu-ru.html": "955a5d2ffc712a76a2049d71f4dc691fc7f7afb89dd823f291479b94b972cc59",
+  "TABU-SHABU-Menu-hi.html": "e0c583eabc1bd324dbdf198d66f8759da7e1c7a612fc86ec02862cabfd82e51f",
+  "TABU-SHABU-Menu-ur.html": "e7af6adcdb33d9b0a27995b186115424e5ed5ab3c8ac65ff43c072bdb9445f1b"
  },
- "source_sha256": "56e4ae7347033df4bae6cbaffd521e386826166939190f5a1bd8b7fcb3d1234c",
+ "source_sha256": "6329e3d2dcef440971d311db063776be76bd89ad78f9dd28474a9280ebbd61db",
  "revision_date": "2026-09-29",
  "files": [
   "TABU-SHABU-Menu-ar.pdf",

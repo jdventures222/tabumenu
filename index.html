@@ -2513,11 +2513,12 @@ async function scrollToMenuStart(token) {
 function langTarget(el) {
   const path = []; let root = el;
   while (root && !root.id && root.parentElement) { path.unshift([...root.parentElement.children].indexOf(root)); root = root.parentElement; }
-  const id = root?.id;
+  const id = root?.id, tabbed = el?.getAttribute("tabindex") === "-1";
   return () => {
     if (el?.isConnected) return el;
     let target = id && $(id);
     for (const index of path) target = target?.children[index];
+    if (tabbed && target && !target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
     return target;
   };
 }
