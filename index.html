@@ -953,6 +953,8 @@ section.menu.pot-flow { --thumb:64px; }
 .pot-flow .protein-row .pick-size { height:100%; flex-direction:column; align-items:flex-start; justify-content:space-between; gap:2px; min-height:58px; padding:8px 10px; font-size:.875rem; }
 .pot-flow .protein-row .pick-one .pick-size { flex-direction:row; justify-content:center; align-items:center; min-height:48px; }
 .pot-flow .pot-proteins:not(.list) .protein-row { align-items:start; }
+@media screen { .pot-flow .pot-proteins:not(.list) .protein-row { overflow-y:hidden; transition:height .2s var(--ease); } }
+@media print { .pot-flow .protein-row { height:auto !important; } }
 .pot-flow .pot-proteins:not(.list) .protein-row > .item > .item-body { flex:1 0 auto; display:flex; flex-direction:column; }
 .pot-flow .pot-proteins:not(.list) .protein-row .pick-one { margin-top:0; padding-top:12px; }
 .pot-flow .pot-proteins:not(.list) .protein-row .item-body > .variants.pickable { margin-top:4px; padding-top:0; }
@@ -2438,12 +2440,20 @@ function applyDaypart() {}
 function renderMain() {
   $("main").innerHTML = `<div class="menu-opening">${specialsHTML(true)}${how2HTML()}</div><button type="button" class="show-order build-pot" id="buildPot">${prose(t("ui.buildPot"))}</button>` + DATA.structure.sections.map(screenSectionHTML).join("");
   $("buildPot").addEventListener("click", () => focusMenuTarget("step-starters", true));
-  /* A swipe row shows its step buttons only when it overflows, and each one hides at its end of the row. */
+  /* A swipe row shows its step buttons only when it overflows, and each one hides at its end of the row. Once a swipe
+     settles, the row is as tall as the tallest card fully in view (else the one most in view); See all sets none. */
   document.querySelectorAll("#main .swipe").forEach(w => {
     const r = w.querySelector(".protein-row"), [prev, next] = w.querySelectorAll(".swipe-step");
     const sync = () => { const max = r.scrollWidth - r.clientWidth, x = Math.abs(r.scrollLeft); w.classList.toggle("scrolls", max > 2); prev.disabled = x < 2; next.disabled = x > max - 2; };
-    w.__sync = sync; r.addEventListener("scroll", sync, { passive: true }); requestAnimationFrame(sync);
+    const fit = () => {
+      const v = r.getBoundingClientRect(), s = getComputedStyle(r); let full = 0, most = 0, h = 0;
+      if (!w.closest(".list")) for (const c of r.children) { const b = c.getBoundingClientRect(), seen = Math.min(b.right, v.right) - Math.max(b.left, v.left); if (b.width && b.left >= v.left - 1 && b.right <= v.right + 1) full = Math.max(full, b.height); else if (seen > most) { most = seen; h = b.height; } }
+      h = full || h; r.style.height = h ? h + parseFloat(s.paddingTop) + parseFloat(s.paddingBottom) + "px" : ""; r.scrollTop = 0;
+    };
+    w.__sync = () => { sync(); fit(); }; w.__fit = fit; r.addEventListener("scroll", sync, { passive: true }); requestAnimationFrame(w.__sync);
+    if ("onscrollend" in window) r.addEventListener("scrollend", fit); else r.addEventListener("scroll", () => { clearTimeout(w.__t); w.__t = setTimeout(fit, 120); }, { passive: true });
   });
+  if (typeof ResizeObserver !== "undefined") { renderMain.cards ||= new ResizeObserver(es => new Set(es.map(e => e.target.closest(".swipe"))).forEach(w => w.__fit())); renderMain.cards.disconnect(); document.querySelectorAll("#main .protein-row > *").forEach(c => renderMain.cards.observe(c)); }
   const end = document.querySelector("#main .flow-end");
   if (end && typeof IntersectionObserver !== "undefined") {
     /* In view means clear of the bar's own height, so the button is never counted while the bar covers it. */
